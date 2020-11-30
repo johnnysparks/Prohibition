@@ -7,10 +7,18 @@
 
 import Foundation
 
-extension AppState {
-    static func random() -> AppState {
+private struct EntityRecord {
+    let entity: Entity
+    let city: City
+    let inventory: [Inventory]
+    let capital: Money
+}
 
-        let all = City.allCases.map(\.randomStarter).flatMap { $0 }
+extension AppState {
+
+    static func random() -> AppState {
+        let user = Self.randomUser()
+        let all = City.allCases.map(\.randomStarter).flatMap { $0 } + [user]
 
         return .init(
             cities: City.allCases,
@@ -19,18 +27,25 @@ extension AppState {
             basePrices: City.allCases.reduce(into: [:], { $0[$1] = $1.randomBasePrices() }),
             inventories: all.reduce(into: [:], { $0[$1.entity] = $1.inventory }),
             capital: all.reduce(into: [:], { $0[$1.entity] = $1.capital }),
-            locations: all.reduce(into: [:], { $0[$1.city] = ($0[$1.city] ?? []) + [$1.entity] }))
+            locations: all.reduce(into: [:], { $0[$1.city] = ($0[$1.city] ?? []) + [$1.entity] }),
+            user: user.entity
+        )
+    }
+
+    private static func randomUser() -> EntityRecord {
+        .init(entity: .newUser, city: .smallest, inventory: [], capital: Money.Category.midrange.randomPrice)
     }
 }
 
+private extension City {
+    static let smallest = City.allCases.sorted { $0.props.population < $1.props.population }.first ?? .nashville
 
-extension City {
-    var randomStarter: [(entity: Entity, city: City, inventory: [Inventory], capital: Money)] {
+    var randomStarter: [EntityRecord] {
         return (0..<self.size.citizens).map { _ in self.randomCitizen() }
             + (0..<self.size.resources).map { _ in self.randomResource() }
     }
 
-    func randomResource() -> (Entity, City, [Inventory], Money) {
+    func randomResource() -> EntityRecord {
         let entity = Entity.randomResource()
 
         assert(entity.product != nil, "Expected product on a natural resource")
@@ -42,10 +57,10 @@ extension City {
                                type: .supply,
                                quantity: product.category.randomQuantity())
 
-        return (entity, self, [supply], .random())
+        return .init(entity: entity, city: self, inventory: [supply], capital: .random())
     }
 
-    func randomCitizen() -> (Entity, City, [Inventory], Money) {
+    func randomCitizen() -> EntityRecord {
         let demands: [Inventory] = (0..<3)
             .map { _ in Product.random(in: .randomStarterCitizenDemand()) }
             .map { .init(product: $0, brand: $0.randomBrand, type: .demand, quantity: $0.category.randomQuantity()) }
@@ -54,7 +69,7 @@ extension City {
             .map { _ in Product.random(in: .randomStarterResource()) }
             .map { .init(product: $0, brand: $0.randomBrand,  type: .supply, quantity: $0.category.randomQuantity()) }
 
-        return (.randomCitizen(), self, demands + supplies, .random())
+        return .init(entity: .randomCitizen(), city: self, inventory: demands + supplies, capital: .random())
     }
 
     func randomBasePrices() -> [Product: Money] {

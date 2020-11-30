@@ -16,6 +16,11 @@ let appReducer = Reducer<AppState, AppAction, AppEnvironment> { state, action, e
         state = full
     case .trade, .production:
         state.events.append(action)
+    case .travel(let travel):
+        state.locations[travel.from] = state.locations[travel.from]?.filter { $0 != travel.entity }
+        state.locations[travel.to]?.append(travel.entity)
+
+        state.events.append(action)
     }
 
     return env.random(TimeInterval(20.0), env.mainQueue)

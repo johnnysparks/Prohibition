@@ -13,6 +13,7 @@ enum AppAction: Equatable {
     case trade(Trade)
     case production(Production)
     case load(AppState)
+    case travel(Travel)
 }
 
 extension AppAction: RandomExample {

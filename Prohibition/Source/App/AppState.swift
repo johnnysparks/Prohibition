@@ -21,6 +21,9 @@ struct AppState: Equatable {
     var inventories: [Entity: [Inventory]] = [:]
     var capital: [Entity: Money] = [:]
     var locations: [City: [Entity]] = [:]
+
+    // Player
+    var user: Entity = .newUser
 }
 
 extension AppState {
@@ -68,6 +71,8 @@ extension AppState {
     func demands(in city: City) -> [(Product, Int)] {
         self.inventories(in: city).demands
     }
+
+    var userCity: City? { self.locations.first { $1.contains(where: \.isUser) }?.key }
 }
 
 private extension Array where Element == Inventory {

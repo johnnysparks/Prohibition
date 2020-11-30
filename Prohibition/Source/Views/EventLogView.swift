@@ -71,6 +71,8 @@ private extension AppAction {
             return trade.viewState
         case .load(let state):
             return .init(icon: "cart", title: "Setup markets", detail: "\(state.events.count) events loaded")
+        case .travel(let travel):
+            return .init(icon: "airplane", title: "\(travel.entity.displayName) on the move", detail: "Went from \(travel.from.name) to \(travel.to.name)")
         }
     }
 }

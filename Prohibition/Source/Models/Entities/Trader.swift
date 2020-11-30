@@ -30,6 +30,8 @@ struct Entity: Equatable, Hashable, RandomExample {
     let type: EntityType
     let personality: Personality
 
+    static let newUser = Entity(id: UUID(), type: .user, personality: .user)
+
     static func random() -> Self { Bool.random() ? .randomCitizen() : .randomResource() }
 
     static func randomCitizen() -> Self {
@@ -62,6 +64,15 @@ struct Entity: Equatable, Hashable, RandomExample {
         }
     }
 
+    var isUser: Bool {
+        if case .user = self.type {
+            return true
+        } else {
+            return false
+        }
+    }
+
+
     var product: Product? {
         if case .resource(let product) = self.type {
             return product
@@ -84,6 +95,7 @@ enum Personality: CaseIterable, Equatable {
     case speculator
     case machinist
     case brewer
+    case user
 }
 
 extension Personality: RandomExample {
