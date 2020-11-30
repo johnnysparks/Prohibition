@@ -12,14 +12,17 @@
 		F652CD41256F0BAD00EB2E47 /* AppState.swift in Sources */ = {isa = PBXBuildFile; fileRef = F652CD40256F0BAD00EB2E47 /* AppState.swift */; };
 		F652CD50256FA2AF00EB2E47 /* Brand.swift in Sources */ = {isa = PBXBuildFile; fileRef = F652CD4F256FA2AF00EB2E47 /* Brand.swift */; };
 		F652CD58256FA2E300EB2E47 /* Product.swift in Sources */ = {isa = PBXBuildFile; fileRef = F652CD57256FA2E300EB2E47 /* Product.swift */; };
-		F652CD5D256FA36500EB2E47 /* Agents.swift in Sources */ = {isa = PBXBuildFile; fileRef = F652CD5C256FA36500EB2E47 /* Agents.swift */; };
-		F652CD62256FA3A300EB2E47 /* Price.swift in Sources */ = {isa = PBXBuildFile; fileRef = F652CD61256FA3A300EB2E47 /* Price.swift */; };
-		F652CD67256FA3DA00EB2E47 /* Market.swift in Sources */ = {isa = PBXBuildFile; fileRef = F652CD66256FA3DA00EB2E47 /* Market.swift */; };
+		F652CD5D256FA36500EB2E47 /* Trader.swift in Sources */ = {isa = PBXBuildFile; fileRef = F652CD5C256FA36500EB2E47 /* Trader.swift */; };
+		F652CD62256FA3A300EB2E47 /* Money.swift in Sources */ = {isa = PBXBuildFile; fileRef = F652CD61256FA3A300EB2E47 /* Money.swift */; };
+		F652CD67256FA3DA00EB2E47 /* City.swift in Sources */ = {isa = PBXBuildFile; fileRef = F652CD66256FA3DA00EB2E47 /* City.swift */; };
 		F652CD6C256FA43800EB2E47 /* Trade.swift in Sources */ = {isa = PBXBuildFile; fileRef = F652CD6B256FA43800EB2E47 /* Trade.swift */; };
 		F652CD71256FBB4900EB2E47 /* Inventory.swift in Sources */ = {isa = PBXBuildFile; fileRef = F652CD70256FBB4900EB2E47 /* Inventory.swift */; };
 		F652CD76256FBD2000EB2E47 /* RandomExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = F652CD75256FBD2000EB2E47 /* RandomExample.swift */; };
 		F652CD81256FBD7600EB2E47 /* Production.swift in Sources */ = {isa = PBXBuildFile; fileRef = F652CD80256FBD7600EB2E47 /* Production.swift */; };
-		F6B5F0E12571B0E100AE9E83 /* MarketListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6B5F0E02571B0E100AE9E83 /* MarketListView.swift */; };
+		F6B5F0E12571B0E100AE9E83 /* CityListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6B5F0E02571B0E100AE9E83 /* CityListView.swift */; };
+		F6B5F0E62574531000AE9E83 /* Load+AppState.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6B5F0E52574531000AE9E83 /* Load+AppState.swift */; };
+		F6B5F1002574E9B000AE9E83 /* AppAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6B5F0FF2574E9B000AE9E83 /* AppAction.swift */; };
+		F6B5F1052574E9CC00AE9E83 /* appReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6B5F1042574E9CC00AE9E83 /* appReducer.swift */; };
 		F6CCBDB8256B7B800089E125 /* ProhibitionApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6CCBDB7256B7B800089E125 /* ProhibitionApp.swift */; };
 		F6CCBDBA256B7B800089E125 /* EventLogView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6CCBDB9256B7B800089E125 /* EventLogView.swift */; };
 		F6CCBDBC256B7B800089E125 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F6CCBDBB256B7B800089E125 /* Assets.xcassets */; };
@@ -50,14 +53,17 @@
 		F652CD40256F0BAD00EB2E47 /* AppState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppState.swift; sourceTree = "<group>"; };
 		F652CD4F256FA2AF00EB2E47 /* Brand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Brand.swift; sourceTree = "<group>"; };
 		F652CD57256FA2E300EB2E47 /* Product.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Product.swift; sourceTree = "<group>"; };
-		F652CD5C256FA36500EB2E47 /* Agents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Agents.swift; sourceTree = "<group>"; };
-		F652CD61256FA3A300EB2E47 /* Price.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Price.swift; sourceTree = "<group>"; };
-		F652CD66256FA3DA00EB2E47 /* Market.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Market.swift; sourceTree = "<group>"; };
+		F652CD5C256FA36500EB2E47 /* Trader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Trader.swift; sourceTree = "<group>"; };
+		F652CD61256FA3A300EB2E47 /* Money.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Money.swift; sourceTree = "<group>"; };
+		F652CD66256FA3DA00EB2E47 /* City.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = City.swift; sourceTree = "<group>"; };
 		F652CD6B256FA43800EB2E47 /* Trade.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Trade.swift; sourceTree = "<group>"; };
 		F652CD70256FBB4900EB2E47 /* Inventory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Inventory.swift; sourceTree = "<group>"; };
 		F652CD75256FBD2000EB2E47 /* RandomExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RandomExample.swift; sourceTree = "<group>"; };
 		F652CD80256FBD7600EB2E47 /* Production.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Production.swift; sourceTree = "<group>"; };
-		F6B5F0E02571B0E100AE9E83 /* MarketListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarketListView.swift; sourceTree = "<group>"; };
+		F6B5F0E02571B0E100AE9E83 /* CityListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CityListView.swift; sourceTree = "<group>"; };
+		F6B5F0E52574531000AE9E83 /* Load+AppState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Load+AppState.swift"; sourceTree = "<group>"; };
+		F6B5F0FF2574E9B000AE9E83 /* AppAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppAction.swift; sourceTree = "<group>"; };
+		F6B5F1042574E9CC00AE9E83 /* appReducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = appReducer.swift; sourceTree = "<group>"; };
 		F6CCBDB4256B7B800089E125 /* Prohibition.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Prohibition.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F6CCBDB7256B7B800089E125 /* ProhibitionApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProhibitionApp.swift; sourceTree = "<group>"; };
 		F6CCBDB9256B7B800089E125 /* EventLogView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventLogView.swift; sourceTree = "<group>"; };
@@ -112,6 +118,7 @@
 			children = (
 				F652CD6B256FA43800EB2E47 /* Trade.swift */,
 				F652CD80256FBD7600EB2E47 /* Production.swift */,
+				F6B5F0E52574531000AE9E83 /* Load+AppState.swift */,
 			);
 			path = Events;
 			sourceTree = "<group>";
@@ -119,11 +126,11 @@
 		F652CD4D256FA27400EB2E47 /* Entities */ = {
 			isa = PBXGroup;
 			children = (
-				F652CD5C256FA36500EB2E47 /* Agents.swift */,
+				F652CD5C256FA36500EB2E47 /* Trader.swift */,
 				F652CD4F256FA2AF00EB2E47 /* Brand.swift */,
-				F652CD66256FA3DA00EB2E47 /* Market.swift */,
+				F652CD66256FA3DA00EB2E47 /* City.swift */,
 				F652CD70256FBB4900EB2E47 /* Inventory.swift */,
-				F652CD61256FA3A300EB2E47 /* Price.swift */,
+				F652CD61256FA3A300EB2E47 /* Money.swift */,
 				F652CD57256FA2E300EB2E47 /* Product.swift */,
 				F652CD3B256F0B3C00EB2E47 /* Recipe.swift */,
 			);
@@ -142,6 +149,8 @@
 			isa = PBXGroup;
 			children = (
 				F652CD40256F0BAD00EB2E47 /* AppState.swift */,
+				F6B5F0FF2574E9B000AE9E83 /* AppAction.swift */,
+				F6B5F1042574E9CC00AE9E83 /* appReducer.swift */,
 			);
 			path = App;
 			sourceTree = "<group>";
@@ -150,7 +159,7 @@
 			isa = PBXGroup;
 			children = (
 				F6CCBDB9256B7B800089E125 /* EventLogView.swift */,
-				F6B5F0E02571B0E100AE9E83 /* MarketListView.swift */,
+				F6B5F0E02571B0E100AE9E83 /* CityListView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -368,19 +377,22 @@
 			buildActionMask = 2147483647;
 			files = (
 				F652CD3C256F0B3C00EB2E47 /* Recipe.swift in Sources */,
-				F652CD62256FA3A300EB2E47 /* Price.swift in Sources */,
-				F6B5F0E12571B0E100AE9E83 /* MarketListView.swift in Sources */,
+				F652CD62256FA3A300EB2E47 /* Money.swift in Sources */,
+				F6B5F0E12571B0E100AE9E83 /* CityListView.swift in Sources */,
 				F652CD81256FBD7600EB2E47 /* Production.swift in Sources */,
 				F6CCBDBA256B7B800089E125 /* EventLogView.swift in Sources */,
 				F6CCBDB8256B7B800089E125 /* ProhibitionApp.swift in Sources */,
+				F6B5F1052574E9CC00AE9E83 /* appReducer.swift in Sources */,
 				F652CD6C256FA43800EB2E47 /* Trade.swift in Sources */,
 				F652CD71256FBB4900EB2E47 /* Inventory.swift in Sources */,
 				F652CD50256FA2AF00EB2E47 /* Brand.swift in Sources */,
+				F6B5F1002574E9B000AE9E83 /* AppAction.swift in Sources */,
+				F6B5F0E62574531000AE9E83 /* Load+AppState.swift in Sources */,
 				F652CD76256FBD2000EB2E47 /* RandomExample.swift in Sources */,
-				F652CD5D256FA36500EB2E47 /* Agents.swift in Sources */,
+				F652CD5D256FA36500EB2E47 /* Trader.swift in Sources */,
 				F652CD41256F0BAD00EB2E47 /* AppState.swift in Sources */,
 				F652CD58256FA2E300EB2E47 /* Product.swift in Sources */,
-				F652CD67256FA3DA00EB2E47 /* Market.swift in Sources */,
+				F652CD67256FA3DA00EB2E47 /* City.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

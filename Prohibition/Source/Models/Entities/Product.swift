@@ -131,3 +131,97 @@ extension Product: RandomExample {
         self.allCases.filter { $0.category == category }.randomElement() ?? .beer
     }
 }
+
+
+extension Product {
+    var priceCategory: Money.Category {
+        switch self.category {
+        case .ingredient:
+            return .cheap
+        case .consumable:
+            return .affordable
+        case .equipmentParts:
+            return .midrange
+        case .lightEquipment:
+            return .expensive
+        case .heavyEquipment:
+            return .exorbitant
+        }
+    }
+
+    var randomBrand: Brand? {
+        switch self.category {
+        case .ingredient, .equipmentParts, .lightEquipment:
+            return nil
+        case .consumable, .heavyEquipment:
+            return Brand.random()
+        }
+    }
+}
+
+
+extension Product.Category {
+    func randomQuantity() -> Int {
+        switch self {
+        case .ingredient:
+            return Int.random(in: 1...19)
+        case .consumable:
+            return Int.random(in: 1...9)
+        case .equipmentParts:
+            return Int.random(in: 1...7)
+        case .lightEquipment:
+            return Int.random(in: 1...2)
+        case .heavyEquipment:
+            return Int.random(in: 1...2)
+        }
+    }
+
+    func randomProduction() -> Int {
+        switch self {
+        case .ingredient:
+            return Int.random(in: 0...3)
+        case .consumable:
+            return Int.random(in: 0...2) == 0 ? 1 : 0
+        case .equipmentParts:
+            return Int.random(in: 0...5) == 0 ? 1 : 0
+        case .lightEquipment:
+            return Int.random(in: 0...25) == 0 ? 1 : 0
+        case .heavyEquipment:
+            return Int.random(in: 0...50) == 0 ? 1 : 0
+        }
+    }
+
+    static func randomStarterCitizenDemand() -> Product.Category {
+        switch Int.random(in: 0...100) {
+        case 0..<60:
+            return .consumable
+        case 60..<70:
+            return .ingredient
+        case 70..<80:
+            return .equipmentParts
+        case 80..<90:
+            return .lightEquipment
+        case 90...:
+            return .heavyEquipment
+        default:
+            return .ingredient
+        }
+    }
+
+    static func randomStarterResource() -> Product.Category {
+        switch Int.random(in: 0...100) {
+        case 0..<70:
+            return .ingredient
+        case 70..<85:
+            return .consumable
+        case 85..<92:
+            return .equipmentParts
+        case 92..<97:
+            return .lightEquipment
+        case 97...:
+            return .heavyEquipment
+        default:
+            return .ingredient
+        }
+    }
+}

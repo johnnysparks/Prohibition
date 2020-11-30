@@ -25,19 +25,24 @@ let appStore: Store<AppState, AppAction> = .init(initialState: .init(), reducer:
 struct ProhibitionApp: App {
     var body: some Scene {
         WindowGroup {
-            TabView {
-                MarketListView(store: appStore)
-                    .tabItem {
-                        Image(systemName: "cart")
-                        Text("Markets")
-                    }
-                EventLogView(store: appStore)
-                    .tabItem {
-                        Image(systemName: "pencil.and.ellipsis.rectangle")
-                        Text("Events")
-                    }
+            WithViewStore(appStore) { store in
+                TabView {
+                    CityListView(store: appStore)
+                        .tabItem {
+                            Image(systemName: "cart")
+                            Text("Cities")
+                        }
+                    EventLogView(store: appStore)
+                        .tabItem {
+                            Image(systemName: "pencil.and.ellipsis.rectangle")
+                            Text("Events")
+                        }
+                }
+                .font(.headline)
+                .onAppear {
+                    store.send(.load(.random()))
+                }
             }
-            .font(.headline)
         }
     }
 }

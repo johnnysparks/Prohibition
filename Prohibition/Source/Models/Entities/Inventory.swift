@@ -9,16 +9,26 @@ import Foundation
 
 /// A supply of a particular product & brand
 struct Inventory: Equatable, RandomExample  {
+    enum InventoryType: Equatable {
+        case supply
+        case demand
+    }
+
     let product: Product
     let brand: Brand?
-    let supply: Int
-    let demand: Int
+    let type: InventoryType
+    let quantity: Int
+
+    var isSupply: Bool { self.type == .supply }
+    var isDemand: Bool { self.type == .demand }
+    var supply: Int { self.isSupply ? self.quantity : 0 }
+    var demand: Int { self.isDemand ? self.quantity : 0 }
 
     static func random() -> Self {
         let recipe = Recipe.random()
         return .init(product: recipe.product,
                      brand: recipe.brand,
-                     supply: .random(in: 1...20),
-                     demand: .random(in: 1...20))
+                     type: Bool.random() ? .supply : .demand,
+                     quantity: .random(in: 1...20))
     }
 }

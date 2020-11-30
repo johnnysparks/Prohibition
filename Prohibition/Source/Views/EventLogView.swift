@@ -69,8 +69,8 @@ private extension AppAction {
             return production.viewState
         case .trade(let trade):
             return trade.viewState
-//        case .navigate(let tab):
-//            return EventLogView.EntryView.ViewState(icon: "map", title: "User nav", detail: "\(tab)")
+        case .load(let state):
+            return .init(icon: "cart", title: "Setup markets", detail: "\(state.events.count) events loaded")
         }
     }
 }
@@ -78,16 +78,16 @@ private extension AppAction {
 private extension Production {
     var viewState: EventLogView.EntryView.ViewState {
         .init(icon: "hammer.fill",
-              title: "\(self.quantityProduced) units of \(self.recipe.product.displayName) made by \(self.producer.name)" + (self.recipe.brand.map({ " for \($0.name)" }) ?? ""),
-              detail: "\(self.recipe.precursors.reduce(0, { $0 + $1.quantityConsumed })) total reagents consumed")
+              title: "\(self.inventory.quantity) units of \(self.inventory.product.displayName) made by \(self.entity.displayName)",
+              detail: "unknown total reagents consumed")
     }
 }
 
 private extension Trade {
     var viewState: EventLogView.EntryView.ViewState {
         .init(icon: "arrow.right.arrow.left",
-              title: "\(self.inventory.product.displayName) sold in \(self.market.city.name)!",
-              detail: "\(self.buyer.name) paid \(self.price.display) to \(self.seller.name) for \(self.inventory.supply) units")
+              title: "\(self.inventory.product.displayName) sold in \(self.city.name)!",
+              detail: "\(self.buyer.name) paid \(self.price.display) to \(self.seller.name) for \(self.inventory.quantity) units")
     }
 }
 

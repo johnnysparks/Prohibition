@@ -9,34 +9,34 @@ import SwiftUI
 import Combine
 import ComposableArchitecture
 
-struct MarketListView: View {
+struct CityListView: View {
     struct ViewState: Equatable {
-        let title = "Markets"
-        let markets: [MarketViewState]
-    }
+        let title = "Cities"
+        let cities: [CityState]
 
-    struct MarketViewState: Equatable {
-        struct Order: Equatable, Hashable {
-            let product: String
-            let description: String
+        struct CityState: Equatable {
+            struct OrderState: Equatable, Hashable {
+                let product: String
+                let description: String
+            }
+
+            let name: String
+            let population: String
+            let resourceCount: String
+            let traderCount: String
+            let sellOrders: [OrderState]
+            let buyOrders: [OrderState]
         }
-
-        let name: String
-        let population: String
-        let resourceCount: String
-        let traderCount: String
-        let sellOrders: [Order]
-        let buyOrders: [Order]
     }
 
     let store: Store<AppState, AppAction>
 
     var body: some View {
-        WithViewStore(self.store.scope(state: \.viewState)) { state in
+        WithViewStore(self.store.scope(state: \.cityListView)) { state in
             NavigationView {
-                List(state.markets, id: \.name.hashValue) { market in
-                    NavigationLink(destination: MarketDetailsView(state: market)) {
-                        MarketCellView(state: market)
+                List(state.cities, id: \.name.hashValue) { city in
+                    NavigationLink(destination: CityDetailsView(state: city)) {
+                        CityCellView(state: city)
                     }
                 }
                 .navigationTitle(state.title)
@@ -44,8 +44,8 @@ struct MarketListView: View {
         }
     }
 
-    struct MarketCellView: View {
-        var state: MarketViewState
+    struct CityCellView: View {
+        var state: ViewState.CityState
 
         var body: some View {
             VStack(alignment: .leading) {
@@ -59,7 +59,7 @@ struct MarketListView: View {
         }
     }
 
-    struct MarketDetailsView: View {
+    struct CityDetailsView: View {
         enum TradeStyle: Int, CaseIterable, Hashable, Identifiable {
             var id: Self { self }
 
@@ -77,7 +77,7 @@ struct MarketListView: View {
         @State var tradeStyle: TradeStyle = .buy
 
         private let gridLayout: [GridItem] = (0..<3).map { _ in .init(.flexible()) }
-        var state: MarketViewState
+        var state: ViewState.CityState
 
         var body: some View {
             VStack(alignment: .leading) {
@@ -98,12 +98,6 @@ struct MarketListView: View {
                     }
                 }
                 .frame(maxWidth: .infinity)
-
-//                Picker(selection: self.$tradeStyle, label: Text("Buy or Sell")) {
-//                    ForEach(0..<TradeStyle.allCases.count) { index in
-//                        Text(TradeStyle.allCases[index].rawValue).tag(index)
-//                    }
-//                }.pickerStyle(SegmentedPickerStyle())
 
                 Picker(selection: self.$tradeStyle, label: Text("Buy or Sell")) {
                     ForEach(TradeStyle.allCases) { style in
@@ -135,33 +129,29 @@ struct MarketListView: View {
 }
 
 private extension AppState {
-    var viewState: MarketListView.ViewState {
-        .init(markets: Market.all.sorted(by: { $0.city.props.population < $1.city.props.population }).map(\.viewState))
-    }
-}
-
-private extension Market {
-    var viewState: MarketListView.MarketViewState {
-        .init(name: self.city.name,
-              population: "pop. \(self.city.props.population)",
-              resourceCount: "\(self.resources.count) resources",
-              traderCount: "\(self.citizens.count) buyers/sellers",
-              sellOrders: self.sellOrders,
-              buyOrders: self.buyOrders
-        )
+    var cityListView: CityListView.ViewState {
+        .init(cities: self.cities.map { self.cityView($0) })
     }
 
-    var sellOrders: [MarketListView.MarketViewState.Order] {
-        self.supplies.map {
+    func cityView(_ city: City) -> CityListView.ViewState.CityState {
+        .init(name: city.name,
+              population: "pop. \(city.props.population)",
+              resourceCount: "\(self.locations[city, default: []].filter(\.isResource).count) resources",
+              traderCount: "\(self.locations[city, default: []].filter(\.isCitizen).count) buyers/sellers",
+              sellOrders: self.sellOrders(in: city),
+              buyOrders: self.buyOrders(in: city))
+    }
+
+    func sellOrders(in city: City) -> [CityListView.ViewState.CityState.OrderState] {
+        self.supplies(in: city).map {
             .init(product: $0.0.displayName,
-                  description: "\($0.1) @ \(self.price(for: $0.0).display)")
+                  description: "\($0.1) @ \(self.price(for: $0.0, in: city).display)")
         }
     }
 
-    var buyOrders: [MarketListView.MarketViewState.Order] {
-        self.demands.map {
-            .init(product: $0.0.displayName,
-                  description: "\($0.1) @ \(self.price(for: $0.0).display)")
+    func buyOrders(in city: City) -> [CityListView.ViewState.CityState.OrderState] {
+        self.demands(in: city).map {
+            .init(product: $0.0.displayName,  description: "\($0.1) @ \(self.price(for: $0.0, in: city).display)")
         }
     }
 }

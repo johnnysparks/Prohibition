@@ -19,26 +19,35 @@ let kPersonNames = [
     "Frances",
 ]
 
-enum Entity: Equatable, RandomExample {
-    // Can buy or sell. Consumes consumables
-    case citizen(name: String)
-    // Only sells raw materials or the occasional lucky manufactured good
-    case naturalResource(product: Product)
-    case user
+struct Entity: Equatable, Hashable, RandomExample {
+    enum EntityType: Equatable, Hashable {
+        case citizen(name: String)
+        case resource(product: Product)
+        case user
+    }
+
+    let id: UUID
+    let type: EntityType
+    let personality: Personality
 
     static func random() -> Self { Bool.random() ? .randomCitizen() : .randomResource() }
 
-    static func randomCitizen() -> Self { .citizen(name: kPersonNames.randomElement() ?? "Moe") }
+    static func randomCitizen() -> Self {
+        .init(id: UUID(), type: .citizen(name: kPersonNames.randomElement() ?? "Moe"), personality: .random())
+
+    }
 
     static func randomResource() -> Self {
-        .naturalResource(product: Product.random(in: Product.Category.randomStarterResource()))
+        .init(id: UUID(),
+              type: .resource(product: Product.random(in: .randomStarterResource())),
+              personality: .random())
     }
 
     var displayName: String {
-        switch self {
+        switch self.type {
         case .citizen(let name):
             return name
-        case .naturalResource(let product):
+        case .resource(let product):
             return product.displayName
         case .user:
             return "PLAYER"
@@ -46,15 +55,23 @@ enum Entity: Equatable, RandomExample {
     }
 
     var isResource: Bool {
-        if case .naturalResource = self {
+        if case .resource = self.type {
             return true
         } else {
             return false
         }
     }
 
+    var product: Product? {
+        if case .resource(let product) = self.type {
+            return product
+        } else {
+            return nil
+        }
+    }
+
     var isCitizen: Bool {
-        if case .citizen = self {
+        if case .citizen = self.type {
             return true
         } else {
             return false
@@ -76,19 +93,23 @@ extension Personality: RandomExample {
 }
 
 struct Trader: Equatable {
+    let city: City
     let entity: Entity
     let inventories: [Inventory]
     let capital: Money
-    let personality: Personality
 
     var name: String { self.entity.displayName }
 }
 
 extension Trader: RandomExample {
     static func random() -> Self {
-        .init(entity: .random(),
+        self.random(city: .random())
+    }
+
+    static func random(city: City) -> Self {
+        .init(city: city,
+              entity: .random(),
               inventories: (1..<3).map { _ in .random() },
-              capital: .random(),
-              personality: .random())
+              capital: .random())
     }
 }

@@ -8,11 +8,17 @@
 import Foundation
 
 struct Production: Equatable, RandomExample {
-    let producer: Trader
-    let recipe: Recipe
-    let quantityProduced: Int
+    let entity: Entity
+    let inventory: Inventory
 
     static func random() -> Self {
-        .init(producer: .random(), recipe: .random(), quantityProduced: .random(in: 1...5))
+        .init(entity: .random(), inventory: .random())
+    }
+}
+
+// TODO: Right here, spit out productions based on number of days passed
+extension Trader {
+    func productions(in interval: TimeInterval) -> [Production] {
+        return []
     }
 }
