@@ -13,7 +13,7 @@
 		F652CD41256F0BAD00EB2E47 /* AppState.swift in Sources */ = {isa = PBXBuildFile; fileRef = F652CD40256F0BAD00EB2E47 /* AppState.swift */; };
 		F652CD50256FA2AF00EB2E47 /* Brand.swift in Sources */ = {isa = PBXBuildFile; fileRef = F652CD4F256FA2AF00EB2E47 /* Brand.swift */; };
 		F652CD58256FA2E300EB2E47 /* Product.swift in Sources */ = {isa = PBXBuildFile; fileRef = F652CD57256FA2E300EB2E47 /* Product.swift */; };
-		F652CD5D256FA36500EB2E47 /* Trader.swift in Sources */ = {isa = PBXBuildFile; fileRef = F652CD5C256FA36500EB2E47 /* Trader.swift */; };
+		F652CD5D256FA36500EB2E47 /* Entity.swift in Sources */ = {isa = PBXBuildFile; fileRef = F652CD5C256FA36500EB2E47 /* Entity.swift */; };
 		F652CD62256FA3A300EB2E47 /* Money.swift in Sources */ = {isa = PBXBuildFile; fileRef = F652CD61256FA3A300EB2E47 /* Money.swift */; };
 		F652CD67256FA3DA00EB2E47 /* City.swift in Sources */ = {isa = PBXBuildFile; fileRef = F652CD66256FA3DA00EB2E47 /* City.swift */; };
 		F652CD6C256FA43800EB2E47 /* Trade.swift in Sources */ = {isa = PBXBuildFile; fileRef = F652CD6B256FA43800EB2E47 /* Trade.swift */; };
@@ -50,7 +50,7 @@
 		F652CD40256F0BAD00EB2E47 /* AppState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppState.swift; sourceTree = "<group>"; };
 		F652CD4F256FA2AF00EB2E47 /* Brand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Brand.swift; sourceTree = "<group>"; };
 		F652CD57256FA2E300EB2E47 /* Product.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Product.swift; sourceTree = "<group>"; };
-		F652CD5C256FA36500EB2E47 /* Trader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Trader.swift; sourceTree = "<group>"; };
+		F652CD5C256FA36500EB2E47 /* Entity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Entity.swift; sourceTree = "<group>"; };
 		F652CD61256FA3A300EB2E47 /* Money.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Money.swift; sourceTree = "<group>"; };
 		F652CD66256FA3DA00EB2E47 /* City.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = City.swift; sourceTree = "<group>"; };
 		F652CD6B256FA43800EB2E47 /* Trade.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Trade.swift; sourceTree = "<group>"; };
@@ -117,7 +117,7 @@
 		F652CD4D256FA27400EB2E47 /* Entities */ = {
 			isa = PBXGroup;
 			children = (
-				F652CD5C256FA36500EB2E47 /* Trader.swift */,
+				F652CD5C256FA36500EB2E47 /* Entity.swift */,
 				F652CD4F256FA2AF00EB2E47 /* Brand.swift */,
 				F652CD66256FA3DA00EB2E47 /* City.swift */,
 				F652CD70256FBB4900EB2E47 /* Inventory.swift */,
@@ -368,7 +368,7 @@
 				F62BA76C257769B100C7282C /* AppEnvironment.swift in Sources */,
 				F6B5F10A2574F0FE00AE9E83 /* View+Hidden.swift in Sources */,
 				F652CD76256FBD2000EB2E47 /* RandomExample.swift in Sources */,
-				F652CD5D256FA36500EB2E47 /* Trader.swift in Sources */,
+				F652CD5D256FA36500EB2E47 /* Entity.swift in Sources */,
 				F652CD41256F0BAD00EB2E47 /* AppState.swift in Sources */,
 				F652CD58256FA2E300EB2E47 /* Product.swift in Sources */,
 				F652CD67256FA3DA00EB2E47 /* City.swift in Sources */,

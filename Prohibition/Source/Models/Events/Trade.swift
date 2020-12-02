@@ -8,14 +8,14 @@
 import Foundation
 
 struct Trade: Equatable, RandomExample {
-    let buyer: Trader
-    let seller: Trader
+    let buyer: Entity
+    let seller: Entity
     let city: City
     let inventory: Inventory
     let price: Money
 
     static func random() -> Self {
-        .init(buyer: Trader.random(), seller: Trader.random(), city: City.random(),
+        .init(buyer: Entity.random(), seller: Entity.random(), city: City.random(),
               inventory: .random(), price: .random())
     }
 }

@@ -8,7 +8,7 @@
 import ComposableArchitecture
 import SwiftUI
 
-struct CityListViewState: Equatable {
+private struct CityListViewState: Equatable {
     let title = "Cities"
     let cities: [CityDetailState]
 }
@@ -69,7 +69,7 @@ struct CityListView: View {
     }
 }
 
-extension AppState {
+private extension AppState {
     var cityListView: CityListViewState {
         .init(cities: self.cities.map { self.cityDetailState(for: $0) })
     }

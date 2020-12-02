@@ -17,8 +17,31 @@ struct Production: Equatable, RandomExample {
 }
 
 // TODO: Right here, spit out productions based on number of days passed
-extension Trader {
-    func productions(in interval: TimeInterval) -> [Production] {
-        return []
+extension AppState {
+    func productions(ticks: Int) -> [Production] {
+        (0..<ticks)
+            .map { _ in self.productionTick() }
+            .flatMap { $0 }
+    }
+
+    func productionTick() -> [Production] {
+        self.inventories
+            .filter(\.key.isResource)
+            .map { entity, inventory -> [Production] in
+                inventory.filter(\.isSupply)
+                    .compactMap { $0.production(entity: entity) }
+            }
+            .flatMap { $0 }
+    }
+}
+
+private extension Inventory {
+    var productionInventory: Inventory? {
+        let qty = self.product.props.category.randomProduction()
+        return qty > 0 ? .init(product: self.product, brand: self.brand, type: self.type, quantity: qty) : nil
+    }
+
+    func production(entity: Entity) -> Production? {
+        self.productionInventory.map { .init(entity: entity, inventory: $0) }
     }
 }

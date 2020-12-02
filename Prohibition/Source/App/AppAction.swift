@@ -11,13 +11,13 @@ import Foundation
 
 enum AppAction: Equatable {
     case trade(Trade)
-    case production(Production)
+    case production([Production])
     case load(AppState)
     case travel(Travel)
 }
 
 extension AppAction: RandomExample {
     static func random() -> Self {
-        Bool.random() ? .trade(.random()) : .production(.random())
+        Bool.random() ? .trade(.random()) : .production([.random()])
     }
 }

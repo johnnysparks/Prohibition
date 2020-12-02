@@ -101,25 +101,3 @@ extension Personality: RandomExample {
         Self.allCases.randomElement() ?? .alcoholic
     }
 }
-
-struct Trader: Equatable {
-    let city: City
-    let entity: Entity
-    let inventories: [Inventory]
-    let capital: Money
-
-    var name: String { self.entity.displayName }
-}
-
-extension Trader: RandomExample {
-    static func random() -> Self {
-        self.random(city: .random())
-    }
-
-    static func random(city: City) -> Self {
-        .init(city: city,
-              entity: .random(),
-              inventories: (1..<3).map { _ in .random() },
-              capital: .random())
-    }
-}

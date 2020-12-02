@@ -63,8 +63,8 @@ private extension AppState {
 private extension AppAction {
     var viewState: EventLogView.EntryView.ViewState {
         switch self {
-        case .production(let production):
-            return production.viewState
+        case .production(let productions):
+            return productions.viewState
         case .trade(let trade):
             return trade.viewState
         case .load(let state):
@@ -77,22 +77,23 @@ private extension AppAction {
     }
 }
 
-private extension Production {
+private extension Array where Element == Production {
     var viewState: EventLogView.EntryView.ViewState {
-        .init(icon: "hammer.fill", title: self.title, detail: "unknown total reagents consumed")
+        .init(icon: "hammer.fill", title: self.title, detail: self.detail)
     }
 
-    private var title: String { "\(qty) units of \(productName) made by \(entityName)" }
-    private var qty: Int { self.inventory.quantity }
-    private var entityName: String { self.entity.displayName }
-    private var productName: String { self.inventory.product.displayName }
+    private var title: String { "\(qty) units of produced" }
+    private var detail: String { "\(products) different products by \(entities) producers" }
+    private var qty: Int { self.map(\.inventory.quantity).reduce(0, +) }
+    private var products: Int { Set(self.map(\.inventory.product)).count }
+    private var entities: Int { Set(self.map(\.entity)).count }
 }
 
 private extension Trade {
     var viewState: EventLogView.EntryView.ViewState {
         .init(icon: "arrow.right.arrow.left",
               title: "\(self.inventory.product.displayName) sold in \(self.city.name)!",
-              detail: "\(buyer.name) paid \(price.display) to \(seller.name) for \(qty) units")
+              detail: "\(buyer.displayName) paid \(price.display) to \(seller.displayName) for \(qty) units")
     }
 
     private var qty: Int { self.inventory.quantity }
