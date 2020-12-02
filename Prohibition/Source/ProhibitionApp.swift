@@ -29,7 +29,7 @@ struct ProhibitionApp: App {
                 TabView {
                     CityListView(store: appStore)
                         .tabItem {
-                            Image(systemName: "cart")
+                            Image(systemName: "map")
                             Text("Cities")
                         }
                     EventLogView(store: appStore)

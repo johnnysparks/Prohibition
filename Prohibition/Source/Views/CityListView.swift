@@ -33,14 +33,35 @@ struct CityListView: View {
     private func cell(state: CityDetailState) -> some View {
         VStack(alignment: .leading) {
             HStack {
-                Text(state.name)
-                    .font(.subheadline)
-                    .bold()
+                HStack(alignment: .top) {
+                    Text(state.name)
+                        .font(.subheadline)
+                        .bold()
 
-                Image(systemName: "person.circle")
-                    .font(.caption)
-                    .foregroundColor(Color.green)
-                    .showIf(state.isUserHere)
+                    Image(systemName: "person.circle")
+                        .font(.caption)
+                        .foregroundColor(.blue)
+                        .showIf(state.isUserHere)
+                }
+
+                Spacer()
+
+                HStack(alignment: .top, spacing: 0) {
+                    ForEach(0..<state.resourcesCount, id: \.self) { _ in
+                        Image(systemName: "flame")
+                            .font(.caption)
+                            .foregroundColor(.green)
+                            .padding(0)
+                    }
+
+                    ForEach(0..<state.tradersCount, id: \.self) { _ in
+                        Image(systemName: "hand.raised")
+                            .font(.caption)
+                            .foregroundColor(.purple)
+                            .padding(0)
+                    }
+                }
+                .frame(alignment: .topTrailing)
             }
 
             Text(state.population)

@@ -9,7 +9,9 @@ import Foundation
 import ComposableArchitecture
 import SwiftUI
 
-struct CityDetailState: Equatable {
+struct CityDetailState: Equatable, Identifiable {
+    var id: City { self.city }
+
     struct OrderState: Equatable, Hashable {
         let product: String
         let description: String
@@ -19,8 +21,10 @@ struct CityDetailState: Equatable {
     let city: City
     let population: String
     let isUserHere: Bool
-    let resourceCount: String
-    let traderCount: String
+    let resourcesLabel: String
+    let tradersLabel: String
+    let resourcesCount: Int
+    let tradersCount: Int
     let sellNow: [OrderState]
     let buyNow: [OrderState]
     let travel: Travel?
@@ -58,12 +62,12 @@ struct CityDetailView: View {
                     }
                     HStack {
                         Image(systemName: "hand.raised")
-                        Text(state.traderCount)
+                        Text(state.tradersLabel)
                     }
 
                     HStack {
                         Image(systemName: "flame")
-                        Text(state.resourceCount)
+                        Text(state.resourcesLabel)
                     }
                 }
                 .frame(maxWidth: .infinity)
@@ -94,7 +98,7 @@ struct CityDetailView: View {
             .navigationTitle(state.name)
             .navigationBarItems(trailing: VStack(alignment: .trailing) {
                 Image(systemName: "person.circle")
-                    .foregroundColor(Color.green)
+                    .foregroundColor(Color.blue)
                     .showIf(state.isUserHere)
 
 
@@ -113,12 +117,16 @@ struct CityDetailView: View {
 
 extension AppState {
     func cityDetailState(for city: City) -> CityDetailState {
-        .init(name: city.name,
+        let resourcesCount = self.locations[city, default: []].filter(\.isResource).count
+        let tradersCount = self.locations[city, default: []].filter(\.isCitizen).count
+        return .init(name: city.name,
               city: city,
               population: "pop. \(city.props.population)",
               isUserHere: self.userCity == city,
-              resourceCount: "\(self.locations[city, default: []].filter(\.isResource).count) resources",
-              traderCount: "\(self.locations[city, default: []].filter(\.isCitizen).count) buyers/sellers",
+              resourcesLabel: "\(resourcesCount) resources",
+              tradersLabel: "\(tradersCount) buyers/sellers",
+              resourcesCount: resourcesCount,
+              tradersCount: tradersCount,
               sellNow: self.sellNow(in: city),
               buyNow: self.buyNow(in: city),
               travel: self.userCity.map { Travel.init(entity: self.user, from: $0, to: city) }
