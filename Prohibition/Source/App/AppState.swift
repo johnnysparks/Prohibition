@@ -5,7 +5,6 @@
 //  Created by Johnny Sparks  on 11/25/20.
 //
 
-import Foundation
 import ComposableArchitecture
 
 // MARK: - State
@@ -35,16 +34,17 @@ extension AppState {
         // the affordability of each item determines the top and bottom price when demand >>> supply or vice versa
 
         let (supply, demand) = self.supplyAndDemand(for: product, in: city)
-        let basePrice = self.basePrices[city]?[product] ?? product.priceCategory.randomPrice
-        let priceRange = product.priceCategory.range
+        let basePrice = self.basePrices[city]?[product] ?? product.props.quality.randomPrice
+        let priceRange = product.props.quality.range
         let priceSpread = Float(priceRange.upperBound - priceRange.lowerBound)
 
         // supply = demand = unit. 100 demand - 0 supply = max shift. 0 demand - 100 supply = minimized price
         let fractionalMarketBalance = Float(demand - supply) / 100.0
 
-        // center the price range of the category on the base price and shift it by the fractional market balance amount.
+        // center the price range of the category on the base price and shift it by the fractional market
+        // balance amount.
         // (multiply the fractionalMarketBalance against the price range and add it to the base price)
-        return basePrice + Int(fractionalMarketBalance * priceSpread)
+        return Money(max(Float(basePrice) + (fractionalMarketBalance * priceSpread), 1))
     }
 
     private func supplyAndDemand(for product: Product, in city: City) -> (supply: Int, demand: Int) {

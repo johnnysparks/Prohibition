@@ -5,21 +5,14 @@
 //  Created by Johnny Sparks  on 11/22/20.
 //
 
-import SwiftUI
 import ComposableArchitecture
+import SwiftUI
 
-typealias RandomEventProducer = (TimeInterval, AnySchedulerOf<DispatchQueue>) -> Effect<AppAction, Never>
-
-struct AppEnvironment {
-    var mainQueue: AnySchedulerOf<DispatchQueue> = DispatchQueue.main.eraseToAnyScheduler()
-    var random: RandomEventProducer = { sec, scheduler in
-        Effect<AppAction, Never>(value: AppAction.random())
-            .delay(for: .seconds(sec), scheduler: scheduler)
-            .eraseToEffect()
-    }
-}
-
-let appStore: Store<AppState, AppAction> = .init(initialState: .init(), reducer: appReducer, environment: AppEnvironment())
+let appStore = Store<AppState, AppAction>(
+    initialState: .init(),
+    reducer: appReducer,
+    environment: AppEnvironment()
+)
 
 @main
 struct ProhibitionApp: App {
@@ -46,5 +39,3 @@ struct ProhibitionApp: App {
         }
     }
 }
-
-

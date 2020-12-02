@@ -5,9 +5,8 @@
 //  Created by Johnny Sparks  on 11/22/20.
 //
 
-import SwiftUI
-import Combine
 import ComposableArchitecture
+import SwiftUI
 
 struct EventLogView: View {
     struct ViewState: Equatable {
@@ -24,7 +23,6 @@ struct EventLogView: View {
                     EntryView(state: entry)
                 }
                 .navigationTitle(state.title)
-
             }.onAppear {
                 state.send(.random())
             }
@@ -72,25 +70,32 @@ private extension AppAction {
         case .load(let state):
             return .init(icon: "cart", title: "Setup markets", detail: "\(state.events.count) events loaded")
         case .travel(let travel):
-            return .init(icon: "airplane", title: "\(travel.entity.displayName) on the move", detail: "Went from \(travel.from.name) to \(travel.to.name)")
+            return .init(icon: "airplane",
+                         title: "\(travel.entity.displayName) on the move",
+                         detail: "Went from \(travel.start.name) to \(travel.end.name)")
         }
     }
 }
 
 private extension Production {
     var viewState: EventLogView.EntryView.ViewState {
-        .init(icon: "hammer.fill",
-              title: "\(self.inventory.quantity) units of \(self.inventory.product.displayName) made by \(self.entity.displayName)",
-              detail: "unknown total reagents consumed")
+        .init(icon: "hammer.fill", title: self.title, detail: "unknown total reagents consumed")
     }
+
+    private var title: String { "\(qty) units of \(productName) made by \(entityName)" }
+    private var qty: Int { self.inventory.quantity }
+    private var entityName: String { self.entity.displayName }
+    private var productName: String { self.inventory.product.displayName }
 }
 
 private extension Trade {
     var viewState: EventLogView.EntryView.ViewState {
         .init(icon: "arrow.right.arrow.left",
               title: "\(self.inventory.product.displayName) sold in \(self.city.name)!",
-              detail: "\(self.buyer.name) paid \(self.price.display) to \(self.seller.name) for \(self.inventory.quantity) units")
+              detail: "\(buyer.name) paid \(price.display) to \(seller.name) for \(qty) units")
     }
+
+    private var qty: Int { self.inventory.quantity }
 }
 
 // MARK: Previews

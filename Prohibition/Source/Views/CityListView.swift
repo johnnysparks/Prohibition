@@ -5,9 +5,8 @@
 //  Created by Johnny Sparks  on 11/27/20.
 //
 
-import SwiftUI
-import Combine
 import ComposableArchitecture
+import SwiftUI
 
 struct CityListViewState: Equatable {
     let title = "Cities"
@@ -68,7 +67,6 @@ struct CityListView: View {
                 .font(.caption)
         }
     }
-
 }
 
 extension AppState {
@@ -76,4 +74,3 @@ extension AppState {
         .init(cities: self.cities.map { self.cityDetailState(for: $0) })
     }
 }
-

@@ -5,7 +5,6 @@
 //  Created by Johnny Sparks  on 11/26/20.
 //
 
-import Foundation
 import ComposableArchitecture
 
 enum City: String, CaseIterable, Identifiable {
@@ -137,7 +136,6 @@ enum City: String, CaseIterable, Identifiable {
 extension City: RandomExample {
     static func random() -> City { Self.allCases.randomElement() ?? .nashville }
 }
-
 
 extension City.Size {
     var citizens: Int {

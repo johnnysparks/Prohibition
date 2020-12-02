@@ -9,6 +9,6 @@ import Foundation
 
 struct Travel: Equatable {
     let entity: Entity
-    let from: City
-    let to: City
+    let start: City
+    let end: City
 }

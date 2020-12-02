@@ -8,7 +8,7 @@
 import Foundation
 
 /// A supply of a particular product & brand
-struct Inventory: Equatable, RandomExample  {
+struct Inventory: Equatable, RandomExample {
     enum InventoryType: Equatable {
         case supply
         case demand

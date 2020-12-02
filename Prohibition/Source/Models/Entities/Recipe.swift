@@ -8,7 +8,7 @@
 import Foundation
 
 /// Definition of the precursors required for a particular product/brand
-struct Recipe: Equatable  {
+struct Recipe: Equatable {
     /// Raw materials to create another product
     struct Precursor: Equatable {
         let product: Product
@@ -36,18 +36,18 @@ extension Recipe: RandomExample {
 
 extension Recipe.Precursor {
     static func precursor(for product: Product) -> Recipe.Precursor? {
-        switch product.category {
-        case .consumable:
+        switch product.props {
+        case (.consumable, _):
             let qty = Int.random(in: 1..<100)
             let random = Product.ingredients.randomElement() ?? .sugar
             return .init(product: random, quantityRequired: qty, quantityConsumed: qty)
-        case .lightEquipment:
-            let qty = Int.random(in: 1..<100)
-            return.init(product: .parts, quantityRequired: qty, quantityConsumed: qty)
-        case .heavyEquipment:
+        case (.equipment, .exorbitant):
             let qty = Int.random(in: 100..<1000)
-            return.init(product: .parts, quantityRequired: qty, quantityConsumed: qty)
-        case .equipmentParts, .ingredient:
+            return .init(product: .parts, quantityRequired: qty, quantityConsumed: qty)
+        case (.equipment, _):
+            let qty = Int.random(in: 1..<100)
+            return .init(product: .parts, quantityRequired: qty, quantityConsumed: qty)
+        default:
             return nil
         }
     }

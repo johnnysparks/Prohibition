@@ -36,7 +36,6 @@ struct Entity: Equatable, Hashable, RandomExample {
 
     static func randomCitizen() -> Self {
         .init(id: UUID(), type: .citizen(name: kPersonNames.randomElement() ?? "Moe"), personality: .random())
-
     }
 
     static func randomResource() -> Self {
@@ -71,7 +70,6 @@ struct Entity: Equatable, Hashable, RandomExample {
             return false
         }
     }
-
 
     var product: Product? {
         if case .resource(let product) = self.type {

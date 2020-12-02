@@ -1,11 +1,10 @@
 //
-//  CityDetailsView.swift
+//  CityDetailView.swift
 //  Prohibition
 //
 //  Created by Johnny Sparks  on 11/30/20.
 //
 
-import Foundation
 import ComposableArchitecture
 import SwiftUI
 
@@ -79,7 +78,6 @@ struct CityDetailView: View {
                 }
                 .pickerStyle(SegmentedPickerStyle())
 
-
                 ScrollView(.vertical, showsIndicators: true) {
                     LazyVGrid(columns: self.gridLayout, spacing: 20) {
                         ForEach(self.tradeStyle == .sell ? state.sellNow : state.buyNow, id: \.hashValue) { order in
@@ -101,7 +99,6 @@ struct CityDetailView: View {
                     .foregroundColor(Color.blue)
                     .showIf(state.isUserHere)
 
-
                 Button("Travel Here") {
                     if let travel = state.travel {
                         state.send(.travel(travel))
@@ -109,11 +106,9 @@ struct CityDetailView: View {
                 }
                 .hidden(state.isUserHere)
             })
-
         }
     }
 }
-
 
 extension AppState {
     func cityDetailState(for city: City) -> CityDetailState {
@@ -129,7 +124,7 @@ extension AppState {
               tradersCount: tradersCount,
               sellNow: self.sellNow(in: city),
               buyNow: self.buyNow(in: city),
-              travel: self.userCity.map { Travel.init(entity: self.user, from: $0, to: city) }
+              travel: self.userCity.map { Travel(entity: self.user, start: $0, end: city) }
         )
     }
 
@@ -137,8 +132,7 @@ extension AppState {
         self.supplies(in: city)
             .map { (name: $0.0.displayName, qty: $0.1, price: self.price(for: $0.0, in: city)) }
             .sorted(by: { $0.price < $1.price })
-            .map { .init(product: $0.name, description: "\($0.qty) @ \($0.price.display)")
-        }
+            .map { .init(product: $0.name, description: "\($0.qty) @ \($0.price.display)") }
     }
 
     private func sellNow(in city: City) -> [CityDetailState.OrderState] {
