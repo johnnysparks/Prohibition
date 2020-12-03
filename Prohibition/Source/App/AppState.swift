@@ -17,6 +17,7 @@ struct AppState: Equatable {
 
     // Market Calculation
     var basePrices: [City: [Product: Money]] = [:]
+    var priceHistory: [City: [Product: [Money]]] = [:]
     var inventories: [Entity: [Inventory]] = [:]
     var capital: [Entity: Money] = [:]
     var locations: [City: [Entity]] = [:]

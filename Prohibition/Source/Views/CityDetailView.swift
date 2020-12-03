@@ -68,6 +68,10 @@ struct CityDetailView: View {
                         Image(systemName: "flame")
                         Text(state.resourcesLabel)
                     }
+
+                    NavigationLink(destination: PriceHistoryView(city: self.city, store: self.store)) {
+                        Text("Price Histories")
+                    }
                 }
                 .frame(maxWidth: .infinity)
 

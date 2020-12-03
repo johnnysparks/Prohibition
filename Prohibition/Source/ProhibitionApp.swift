@@ -30,6 +30,16 @@ struct ProhibitionApp: App {
                             Image(systemName: "pencil.and.ellipsis.rectangle")
                             Text("Events")
                         }
+                    EntityListView(store: appStore)
+                        .tabItem {
+                            Image(systemName: "person.3")
+                            Text("Citizens")
+                        }
+                    PlayerDetailView(store: appStore)
+                        .tabItem {
+                            Image(systemName: "person")
+                            Text("Player")
+                        }
                 }
                 .font(.headline)
                 .onAppear {

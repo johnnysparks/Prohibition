@@ -17,9 +17,39 @@ let kPersonNames = [
     "Mildred",
     "Donald",
     "Frances",
+    "Robert",
+    "Mary",
+    "John",
+    "Dorothy",
+    "James",
+    "Helen",
+    "William",
+    "Betty",
+    "Charles",
+    "Margaret",
+    "Thomas",
+    "Elizabeth",
+    "Frank",
+    "Evelyn",
+    "Harold",
+    "Anna",
+    "Paul",
+    "Marie",
+    "Raymond",
+    "Alice",
+    "Walter",
+    "Jean",
+    "Jack",
+    "Shirley",
 ]
 
-struct Entity: Equatable, Hashable, RandomExample {
+private func randomName() -> String {
+    let first = (kPersonNames.randomElement() ?? "Moe")
+    let last = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".randomElement().map(String.init) ?? "A"
+    return "\(first) \(last)."
+}
+
+struct Entity: Equatable, Hashable, RandomExample, Identifiable {
     enum EntityType: Equatable, Hashable {
         case citizen(name: String)
         case resource(product: Product)
@@ -35,7 +65,7 @@ struct Entity: Equatable, Hashable, RandomExample {
     static func random() -> Self { Bool.random() ? .randomCitizen() : .randomResource() }
 
     static func randomCitizen() -> Self {
-        .init(id: UUID(), type: .citizen(name: kPersonNames.randomElement() ?? "Moe"), personality: .random())
+        .init(id: UUID(), type: .citizen(name: randomName()), personality: .random())
     }
 
     static func randomResource() -> Self {

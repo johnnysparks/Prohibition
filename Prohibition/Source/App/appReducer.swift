@@ -1,3 +1,4 @@
+//swiftlint:disable file_name
 //
 //  appReducer.swift
 //  Prohibition
@@ -17,9 +18,23 @@ let appReducer = Reducer<AppState, AppAction, AppEnvironment> { state, action, e
     case .trade:
         break
     case .production(let productions):
+        // Build new inventories
         for (entity, inventories) in state.inventories {
             let next = inventories.map { $0.adding(quantity: productions.supply(of: $0.product, for: entity)) }
             state.inventories[entity] = next
+        }
+
+        // Recalculate prices
+        for pair in state.basePrices {
+            var cityHistory = state.priceHistory[pair.key] ?? [:]
+
+            for product in pair.value.keys {
+                var productHistory = cityHistory[product] ?? []
+                productHistory.append( state.price(for: product, in: pair.key) )
+                cityHistory[product] = productHistory
+            }
+
+            state.priceHistory[pair.key] = cityHistory
         }
 
     case .travel(let travel):
