@@ -8,15 +8,15 @@
 import Foundation
 
 struct Production: Equatable, RandomExample {
+    let city: City
     let entity: Entity
     let inventory: Inventory
 
     static func random() -> Self {
-        .init(entity: .random(), inventory: .random())
+        .init(city: .random(), entity: .random(), inventory: .random())
     }
 }
 
-// TODO: Right here, spit out productions based on number of days passed
 extension AppState {
     func productions(ticks: Int) -> [Production] {
         (0..<ticks)
@@ -25,23 +25,28 @@ extension AppState {
     }
 
     func productionTick() -> [Production] {
-        self.inventories
-            .filter(\.key.isResource)
-            .map { entity, inventory -> [Production] in
-                inventory.filter(\.isSupply)
-                    .compactMap { $0.production(entity: entity) }
+        var productions = [Production]()
+        self.inventories.forEach { city, entityInventories in
+            entityInventories.filter(\.key.isResource).forEach { entity, inventories in
+                let entityProductions = inventories
+                    .filter(\.isSupply)
+                    .compactMap { $0.production(city: city, entity: entity) }
+                productions.append(contentsOf: entityProductions )
             }
-            .flatMap { $0 }
+        }
+
+        return productions
     }
 }
 
 private extension Inventory {
     var productionInventory: Inventory? {
         let qty = self.product.props.category.randomProduction()
-        return qty > 0 ? .init(product: self.product, brand: self.brand, type: self.type, quantity: qty) : nil
+        return qty > 0 ? .init(product: self.product, brand: self.brand, type: self.type, quantity: qty,
+                               bid: self.bid) : nil
     }
 
-    func production(entity: Entity) -> Production? {
-        self.productionInventory.map { .init(entity: entity, inventory: $0) }
+    func production(city: City, entity: Entity) -> Production? {
+        self.productionInventory.map { .init(city: city, entity: entity, inventory: $0) }
     }
 }

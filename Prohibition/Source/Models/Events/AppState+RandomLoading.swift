@@ -8,16 +8,24 @@
 extension AppState {
     static func random() -> AppState {
         let user = Self.randomUser()
-        let all = City.allCases.map(\.randomStarter).flatMap { $0 } + [user]
+        let records: [EntityRecord] = City.allCases.map(\.randomStarter).flatMap { $0 } + [user]
+
+        var inventories: [City: [Entity: [Inventory]]] = [:]
+
+        records.forEach { r in
+            inventories[r.city] = inventories[r.city] ?? [:]
+            inventories[r.city]?[r.entity] = r.inventory
+        }
+
+        let locations: [Entity: City] = records.reduce(into: [:]) { $0[$1.entity] = $1.city }
 
         return .init(
             cities: City.allCases,
-            entities: all.map(\.entity),
+            entities: records.map(\.entity),
             events: [],
-            basePrices: City.allCases.reduce(into: [:], { $0[$1] = $1.randomBasePrices() }),
-            inventories: all.reduce(into: [:], { $0[$1.entity] = $1.inventory }),
-            capital: all.reduce(into: [:], { $0[$1.entity] = $1.capital }),
-            locations: all.reduce(into: [:], { $0[$1.city] = ($0[$1.city] ?? []) + [$1.entity] }),
+            inventories: inventories,
+            capital: records.reduce(into: [:], { $0[$1.entity] = $1.capital }),
+            locations: locations,
             user: user.entity
         )
     }
@@ -32,6 +40,23 @@ private struct EntityRecord {
     let city: City
     let inventory: [Inventory]
     let capital: Money
+}
+
+extension Array where Element == Inventory {
+    func combining(other: [Inventory]) -> [Inventory] {
+        var supply: [Product: [Inventory]] = [:]
+        var demand: [Product: [Inventory]] = [:]
+
+        for i in self + other {
+            if i.type == .demand {
+                demand[i.product] = (demand[i.product] ?? []) + [i]
+            } else {
+                supply[i.product] = (supply[i.product] ?? []) + [i]
+            }
+        }
+
+        return []
+    }
 }
 
 private extension City {
@@ -52,7 +77,8 @@ private extension City {
         let supply = Inventory(product: product,
                                brand: product.randomBrand,
                                type: .supply,
-                               quantity: product.props.category.randomQuantity())
+                               quantity: product.props.category.randomQuantity(),
+                               bid: product.props.quality.randomPrice)
 
         return .init(entity: entity, city: self, inventory: [supply], capital: .random())
     }
@@ -79,6 +105,7 @@ private extension Inventory {
         .init(product: product,
               brand: product.randomBrand,
               type: type,
-              quantity: product.props.category.randomQuantity())
+              quantity: product.props.category.randomQuantity(),
+              bid: product.props.quality.randomPrice)
     }
 }

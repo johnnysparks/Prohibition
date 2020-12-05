@@ -23,10 +23,10 @@
 		F652CD71256FBB4900EB2E47 /* Inventory.swift in Sources */ = {isa = PBXBuildFile; fileRef = F652CD70256FBB4900EB2E47 /* Inventory.swift */; };
 		F652CD76256FBD2000EB2E47 /* RandomExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = F652CD75256FBD2000EB2E47 /* RandomExample.swift */; };
 		F652CD81256FBD7600EB2E47 /* Production.swift in Sources */ = {isa = PBXBuildFile; fileRef = F652CD80256FBD7600EB2E47 /* Production.swift */; };
+		F67AD10A257C38F0009F8137 /* MarketSummary.swift in Sources */ = {isa = PBXBuildFile; fileRef = F67AD109257C38F0009F8137 /* MarketSummary.swift */; };
 		F6B5F0E12571B0E100AE9E83 /* CityListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6B5F0E02571B0E100AE9E83 /* CityListView.swift */; };
 		F6B5F0E62574531000AE9E83 /* AppState+RandomLoading.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6B5F0E52574531000AE9E83 /* AppState+RandomLoading.swift */; };
 		F6B5F1002574E9B000AE9E83 /* AppAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6B5F0FF2574E9B000AE9E83 /* AppAction.swift */; };
-		F6B5F1052574E9CC00AE9E83 /* appReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6B5F1042574E9CC00AE9E83 /* appReducer.swift */; };
 		F6B5F10A2574F0FE00AE9E83 /* View+Hidden.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6B5F1092574F0FE00AE9E83 /* View+Hidden.swift */; };
 		F6B5F10F2574FD5B00AE9E83 /* CityDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6B5F10E2574FD5B00AE9E83 /* CityDetailView.swift */; };
 		F6B5F117257502FC00AE9E83 /* Travel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6B5F116257502FC00AE9E83 /* Travel.swift */; };
@@ -64,10 +64,10 @@
 		F652CD70256FBB4900EB2E47 /* Inventory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Inventory.swift; sourceTree = "<group>"; };
 		F652CD75256FBD2000EB2E47 /* RandomExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RandomExample.swift; sourceTree = "<group>"; };
 		F652CD80256FBD7600EB2E47 /* Production.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Production.swift; sourceTree = "<group>"; };
+		F67AD109257C38F0009F8137 /* MarketSummary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarketSummary.swift; sourceTree = "<group>"; };
 		F6B5F0E02571B0E100AE9E83 /* CityListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CityListView.swift; sourceTree = "<group>"; };
 		F6B5F0E52574531000AE9E83 /* AppState+RandomLoading.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AppState+RandomLoading.swift"; sourceTree = "<group>"; };
 		F6B5F0FF2574E9B000AE9E83 /* AppAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppAction.swift; sourceTree = "<group>"; };
-		F6B5F1042574E9CC00AE9E83 /* appReducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = appReducer.swift; sourceTree = "<group>"; };
 		F6B5F1092574F0FE00AE9E83 /* View+Hidden.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+Hidden.swift"; sourceTree = "<group>"; };
 		F6B5F10E2574FD5B00AE9E83 /* CityDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CityDetailView.swift; sourceTree = "<group>"; };
 		F6B5F116257502FC00AE9E83 /* Travel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Travel.swift; sourceTree = "<group>"; };
@@ -129,6 +129,7 @@
 				F652CD4F256FA2AF00EB2E47 /* Brand.swift */,
 				F652CD66256FA3DA00EB2E47 /* City.swift */,
 				F652CD70256FBB4900EB2E47 /* Inventory.swift */,
+				F67AD109257C38F0009F8137 /* MarketSummary.swift */,
 				F652CD61256FA3A300EB2E47 /* Money.swift */,
 				F652CD57256FA2E300EB2E47 /* Product.swift */,
 				F652CD3B256F0B3C00EB2E47 /* Recipe.swift */,
@@ -150,7 +151,6 @@
 				F652CD40256F0BAD00EB2E47 /* AppState.swift */,
 				F62BA76B257769B100C7282C /* AppEnvironment.swift */,
 				F6B5F0FF2574E9B000AE9E83 /* AppAction.swift */,
-				F6B5F1042574E9CC00AE9E83 /* appReducer.swift */,
 			);
 			path = App;
 			sourceTree = "<group>";
@@ -372,8 +372,8 @@
 				F6CCBDBA256B7B800089E125 /* EventLogView.swift in Sources */,
 				F6CCBDB8256B7B800089E125 /* ProhibitionApp.swift in Sources */,
 				F6C3698A25780A5C0041260E /* EntityListView.swift in Sources */,
-				F6B5F1052574E9CC00AE9E83 /* appReducer.swift in Sources */,
 				F651C43A25789F4400C382C5 /* SparkLineView.swift in Sources */,
+				F67AD10A257C38F0009F8137 /* MarketSummary.swift in Sources */,
 				F652CD6C256FA43800EB2E47 /* Trade.swift in Sources */,
 				F652CD71256FBB4900EB2E47 /* Inventory.swift in Sources */,
 				F652CD50256FA2AF00EB2E47 /* Brand.swift in Sources */,

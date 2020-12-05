@@ -200,11 +200,11 @@ extension Product.Category {
     func randomQuantity() -> Int {
         switch self {
         case .ingredient:
-            return Int.random(in: 1...19)
-        case .consumable:
-            return Int.random(in: 1...9)
-        case .equipmentParts:
             return Int.random(in: 1...7)
+        case .consumable:
+            return Int.random(in: 1...5)
+        case .equipmentParts:
+            return Int.random(in: 1...3)
         case .equipment:
             return Int.random(in: 1...2)
         }

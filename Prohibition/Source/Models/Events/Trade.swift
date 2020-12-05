@@ -19,3 +19,27 @@ struct Trade: Equatable, RandomExample {
               inventory: .random(), price: .random())
     }
 }
+
+extension AppState {
+    func trades(ticks: Int) -> [Trade] {
+        (0..<ticks)
+            .map { _ in self.tradeTick() }
+            .flatMap { $0 }
+    }
+
+    func tradeTick() -> [Trade] {
+        return []
+//        self.inventories
+//            .filter(\.key.isResource)
+//            .map { entity, inventory -> [Trade] in
+//                return []
+//                let all = inventory
+//                    .compactMap { $0.production(entity: entity) }
+//            }
+//            .flatMap { $0 }
+    }
+}
+
+// demands
+
+// supplies

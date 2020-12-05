@@ -16,76 +16,83 @@ struct AppState: Equatable {
     var events: [AppAction] = []
 
     // Market Calculation
-    var basePrices: [City: [Product: Money]] = [:]
-    var priceHistory: [City: [Product: [Money]]] = [:]
-    var inventories: [Entity: [Inventory]] = [:]
+    var marketHistory: [City: [Product: [MarketSummary]]] = [:]
+    var inventories: [City: [Entity: [Inventory]]] = [:]
     var capital: [Entity: Money] = [:]
-    var locations: [City: [Entity]] = [:]
+    var locations: [Entity: City] = [:]
 
     // Player
     var user: Entity = .newUser
+
+    // Time
+    var ticks: Int = 0
+}
+
+// MARK: - Reducer
+
+let appReducer = Reducer<AppState, AppAction, AppEnvironment> { state, action, env in
+    switch action {
+    case .load(let full):
+        state = full
+    case .trade:
+        break
+    case .production(let productions):
+        // Build new inventories
+        for (city, entityInventories) in state.inventories {
+            for (entity, inventories) in entityInventories {
+                let next = inventories.map { $0.adding(quantity: productions.supply(of: $0.product, for: entity)) }
+                state.inventories[city]?[entity] = next
+            }
+        }
+
+        // Get min sell price and max buy price for price history
+        for (city, entityInventories) in state.inventories {
+            var markets: [Product: MarketSummary] = [:]
+            for i in entityInventories.flatMap({ $0.value }) {
+                markets[i.product] = (markets[i.product] ?? .init(product: i.product)).applying(inventory: i)
+            }
+
+            state.marketHistory[city] = state.marketHistory[city] ?? [:]
+            for (product, market) in markets {
+                let next = (state.marketHistory[city]?[product] ?? []) + [market]
+                state.marketHistory[city]?[product] = next
+            }
+        }
+
+    case .travel(let travel):
+        state.locations[travel.entity] = travel.end
+        let stuff = state.inventories[travel.start]?[travel.entity] ?? []
+        state.inventories[travel.end]?[travel.entity] = stuff
+    }
+
+    state.events.append(action)
+
+    return env.produceAfter(TimeInterval(10.0), state, env.mainQueue)
 }
 
 extension AppState {
-    func price(for product: Product, in city: City) -> Money {
-        // price is determined by total available inventory and total demand
-        // each market has a "unit price" per product where units of supply == units of demand
-        // the maximum supply for any resource == 99
-        // the minimum supply for any resource == 0
-        // the affordability of each item determines the top and bottom price when demand >>> supply or vice versa
-
-        let (supply, demand) = self.supplyAndDemand(for: product, in: city)
-        let basePrice = self.basePrices[city]?[product] ?? product.props.quality.randomPrice
-        let priceRange = product.props.quality.range
-        let priceSpread = Float(priceRange.upperBound - priceRange.lowerBound)
-
-        // supply = demand = unit. 100 demand - 0 supply = max shift. 0 demand - 100 supply = minimized price
-        let fractionalMarketBalance = Float(demand - supply) / 100.0
-
-        // center the price range of the category on the base price and shift it by the fractional market
-        // balance amount.
-        // (multiply the fractionalMarketBalance against the price range and add it to the base price)
-        return Money(max(Float(basePrice) + (fractionalMarketBalance * priceSpread), 1))
-    }
-
-    private func supplyAndDemand(for product: Product, in city: City) -> (supply: Int, demand: Int) {
-        self.inventories(for: product, in: city)
-            .reduce((0, 0)) { ($0.0 + $1.supply, $0.1 + $1.demand) }
-    }
-
-    func inventories(for product: Product, in city: City) -> [Inventory] {
-        (self.locations[city] ?? [])
-            .compactMap { self.inventories[$0]?.filter { $0.product == product } }
-            .flatMap { $0 }
-    }
-
-    func inventories(in city: City) -> [Inventory] {
-        (self.locations[city] ?? [])
-            .compactMap { self.inventories[$0] }
-            .flatMap { $0 }
-    }
-
-    func supplies(in city: City) -> [(Product, Int)] {
-        self.inventories(in: city).supplies
-    }
-
-    func demands(in city: City) -> [(Product, Int)] {
-        self.inventories(in: city).demands
-    }
-
-    var userCity: City? { self.locations.first { $1.contains(where: \.isUser) }?.key }
+    var userCity: City? { self.locations[self.user] }
 }
 
-private extension Array where Element == Inventory {
-    var supplies: [(Product, Int)] {
-        self.filter(\.isSupply).reduce(into: [Product: Int]()) { $0[$1.product] = ($0[$1.product] ?? 0) + $1.quantity }
-            .map { ($0.key, $0.value) }
-            .filter { $1 > 0 }
-    }
-
-    var demands: [(Product, Int)] {
-        self.filter(\.isDemand).reduce(into: [Product: Int]()) { $0[$1.product] = ($0[$1.product] ?? 0) + $1.quantity }
-            .map { ($0.key, $0.value) }
-            .filter { $1 > 0 }
+private extension Inventory {
+    func adding(quantity: Int) -> Inventory {
+        .init(product: self.product, brand: self.brand, type: self.type, quantity: self.quantity + quantity,
+              bid: self.bid)
     }
 }
+
+private extension Array where Element == Production {
+    func supply(of product: Product, for entity: Entity) -> Int {
+        self.reduce(0) {
+            $0 + ($1.entity == entity && $1.inventory.product == product ? $1.inventory.quantity : 0)
+        }
+    }
+}
+
+// every demand will have a price and every supply will have a price.
+// For every supply price < demand price there will be a sale.
+// sort sells by min > max
+// sort buys by max > min
+// while sell price < buy price, trade units.
+
+// change price history to average price. both buy and sell are equally weighted.

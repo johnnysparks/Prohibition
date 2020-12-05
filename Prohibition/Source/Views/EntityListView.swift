@@ -64,28 +64,26 @@ private let kColors: [Color] = [.red, .green, .blue, .orange, .pink, .purple]
 
 private extension AppState {
     var entityListView: EntityListViewState {
-        .init(entities: self.entities.filter(\.isCitizen).map { self.entityDetailState(for: $0) })
+        .init(entities: self.entities.filter(\.isCitizen).compactMap { self.entityDetailState(for: $0) })
     }
 
-    func entityDetailState(for entity: Entity) -> EntityDetailState {
-        let (unique, total) = self.products(for: entity)
+    func entityDetailState(for entity: Entity) -> EntityDetailState? {
+        guard let city = self.locations[entity], let inventories = self.inventories[city]?[entity] else {
+            return nil
+        }
+
+        let dict: [Product: Int] = inventories
+            .filter(\.isSupply)
+            .reduce(into: [:]) { $0[$1.product] = ($0[$1.product] ?? 0) + $1.quantity }
+
+        let (unique, total) = (dict.keys.count, dict.values.reduce(0, +))
+
         return .init(
             entity: entity,
-            name: "\(entity.displayName) from \(self.cityName(for: entity))",
+            name: "\(entity.displayName) from \(city.name)",
             icon: "person.fill",
             color: kColors[abs(entity.displayName.hash) % kColors.count],
             inventory: "\(unique) products, \(total) total items",
             money: (self.capital[entity] ?? 0).display)
-    }
-
-    func products(for entity: Entity) -> (unique: Int, total: Int) {
-        let dict: [Product: Int] = (self.inventories[entity] ?? []).filter(\.isSupply)
-            .reduce(into: [:]) { $0[$1.product] = ($0[$1.product] ?? 0) + $1.quantity }
-
-        return (dict.keys.count, dict.values.reduce(0, +))
-    }
-
-    func cityName(for entity: Entity) -> String {
-        self.locations.first(where: { $0.value.contains(entity) })?.key.name ?? "Unknown"
     }
 }

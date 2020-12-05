@@ -116,8 +116,8 @@ struct CityDetailView: View {
 
 extension AppState {
     func cityDetailState(for city: City) -> CityDetailState {
-        let resourcesCount = self.locations[city, default: []].filter(\.isResource).count
-        let tradersCount = self.locations[city, default: []].filter(\.isCitizen).count
+        let resourcesCount = self.inventories[city]?.keys.filter(\.isResource).count ?? 0
+        let tradersCount = self.inventories[city]?.keys.filter(\.isCitizen).count ?? 0
         return .init(name: city.name,
               city: city,
               population: "pop. \(city.props.population)",
@@ -133,16 +133,24 @@ extension AppState {
     }
 
     private func buyNow(in city: City) -> [CityDetailState.OrderState] {
-        self.supplies(in: city)
-            .map { (name: $0.0.displayName, qty: $0.1, price: self.price(for: $0.0, in: city)) }
-            .sorted(by: { $0.price < $1.price })
-            .map { .init(product: $0.name, description: "\($0.qty) @ \($0.price.display)") }
+        (self.marketHistory[city]?.values.compactMap(\.last) ?? [])
+            .filter(\.hasSupply)
+            .compactMap(\.buyOrder)
     }
 
     private func sellNow(in city: City) -> [CityDetailState.OrderState] {
-        self.demands(in: city)
-            .map { (name: $0.0.displayName, qty: $0.1, price: self.price(for: $0.0, in: city)) }
-            .sorted(by: { $0.price < $1.price })
-            .map { .init(product: $0.name, description: "\($0.qty) @ \($0.price.display)") }
+        (self.marketHistory[city]?.values.compactMap(\.last) ?? [])
+            .filter(\.hasDemand)
+            .compactMap(\.sellOrder)
+    }
+}
+
+private extension MarketSummary {
+    var sellOrder: CityDetailState.OrderState? {
+        .init(product: self.product.displayName, description: "\(self.demandQty) @ \(self.sell.display)")
+    }
+
+    var buyOrder: CityDetailState.OrderState? {
+        .init(product: self.product.displayName, description: "\(self.supplyQty) @ \(self.buy.display)")
     }
 }

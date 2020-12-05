@@ -9,5 +9,6 @@
 import XCTest
 
 class MoneyTests: XCTestCase {
-//    func testPriceScales() {}
+//    func testPriceScales() {
+//    }
 }

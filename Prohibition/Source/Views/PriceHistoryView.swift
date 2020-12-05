@@ -55,8 +55,8 @@ struct PriceHistoryView: View {
 
 private extension AppState {
     func priceHistoriesView(for city: City) -> HistoriesState {
-        let hist: [(product: Product, prices: [Money])] = self.priceHistory[city]?
-            .compactMap { !$0.value.isEmpty ? ($0.key, $0.value) : nil } ?? []
+        let hist: [(product: Product, prices: [Money])] = self.marketHistory[city]?
+            .compactMap { !$0.value.isEmpty ? ($0.key, $0.value.map(\.sell)) : nil } ?? []
 
         return .init(
             title: city.name,

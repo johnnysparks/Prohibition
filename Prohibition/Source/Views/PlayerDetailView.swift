@@ -49,10 +49,14 @@ struct PlayerDetailView: View {
 
 private extension AppState {
     var money: Money { self.capital[self.user] ?? 0 }
+    var userInventories: [Inventory] {
+        self.userCity.map { self.inventories[$0]?[self.user] ?? [] } ?? []
+    }
+
     var playerDetailState: PlayerDetailState {
         .init(location: self.userCity?.name ?? "Nowhere",
               money: self.money.display,
-              inventories: (self.inventories[self.user] ?? []).map(\.viewState))
+              inventories: self.userInventories.map(\.viewState))
     }
 }
 

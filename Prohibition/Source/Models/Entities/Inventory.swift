@@ -18,6 +18,7 @@ struct Inventory: Equatable, RandomExample {
     let brand: Brand?
     let type: InventoryType
     let quantity: Int
+    let bid: Money
 
     var isSupply: Bool { self.type == .supply }
     var isDemand: Bool { self.type == .demand }
@@ -29,6 +30,7 @@ struct Inventory: Equatable, RandomExample {
         return .init(product: recipe.product,
                      brand: recipe.brand,
                      type: Bool.random() ? .supply : .demand,
-                     quantity: .random(in: 1...20))
+                     quantity: .random(in: 1...20),
+                     bid: recipe.product.props.quality.randomPrice)
     }
 }
