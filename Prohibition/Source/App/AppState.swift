@@ -26,6 +26,9 @@ struct AppState: Equatable {
 
     // Time
     var ticks: Int = 0
+
+    // Settings
+    var tickTime: TimeInterval = 10
 }
 
 // MARK: - Reducer
@@ -52,9 +55,11 @@ let appReducer = Reducer<AppState, AppAction, AppEnvironment> { state, action, e
         let trades = state.tradeTick()
         state.apply(trades: trades)
         state.events.append(.trade(trades))
+
+        state.ticks += 1
     }
 
-    return env.gameTick(TimeInterval(10.0), state, env.mainQueue)
+    return env.gameTick(TimeInterval(state.tickTime), state, env.mainQueue)
 }
 
 extension AppState {

@@ -97,11 +97,7 @@ class TradeTable {
             .sorted(by: { $0.price < $1.price })
         self.supplies = inventories.filter(\.1.isSupply)
             .map { ($0.0, $0.1.bid, $0.1.quantity) }
-            .sorted(by: { $0.price > $1.price })
-
-//        print("demands: \(self.demands)")
-//        print("supplies: \(self.supplies)")
-    }
+            .sorted(by: { $0.price > $1.price })    }
 
     func trades() -> [Trade] {
         var trades: [Trade] = []

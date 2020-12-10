@@ -97,7 +97,7 @@ private extension Array where Element == Production {
             name: "Productions",
             title: self.title,
             detail: self.detail,
-            itemized: self.map { "\($0.entity.name) made \($0.inventory.quantity) \($0.inventory.product.displayName)" }
+            itemized: self.map(\.eventLogDisplay)
         )
     }
 
@@ -108,6 +108,12 @@ private extension Array where Element == Production {
     private var entities: Int { Set(self.map(\.entity)).count }
 }
 
+private extension Production {
+    var eventLogDisplay: String {
+        "\(entity.name) made \(inventory.quantity) \(inventory.product.displayName) in \(city.name)"
+    }
+}
+
 private extension Array where Element == Trade {
     var viewState: EventLogEntryState {
         .init(
@@ -115,9 +121,8 @@ private extension Array where Element == Trade {
             name: "Trades",
             title: self.title,
             detail: self.detail,
-            itemized: self.map {
-            "\($0.buyer.name) buys \($0.qty) \($0.product.displayName) @ \($0.price.display) from \($0.seller.name)"
-        })
+            itemized: self.map(\.eventLogDisplay)
+        )
     }
 
     private var title: String { "\(qty) items traded for \(value.display)" }
@@ -126,6 +131,12 @@ private extension Array where Element == Trade {
     private var qty: Int { self.map(\.qty).reduce(0, +) }
     private var products: Int { Set(self.map(\.product)).count }
     private var traders: Int { Set(self.map(\.buyer)).count }
+}
+
+private extension Trade {
+    var eventLogDisplay: String {
+        "\(buyer.name) buys \(qty) \(product.displayName) @ \(price.display) from \(seller.name)"
+    }
 }
 
 // MARK: Previews

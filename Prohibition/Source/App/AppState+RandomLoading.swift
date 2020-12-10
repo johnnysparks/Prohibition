@@ -72,14 +72,10 @@ private extension City {
         let p = entity.personality
         let capital = Money.random(in: p.props.capital)
 
-        let demands = (0..<3).compactMap { _ in p.randomInventory(type: .demand) }
-        let supplies = (0..<3).compactMap { _ in p.randomInventory(type: .supply) }
+        let demands = (0..<12).compactMap { _ in p.randomInventory(type: .demand) }
+        let supplies = (0..<4).compactMap { _ in p.randomInventory(type: .supply) }
 
         return .init(entity: entity, city: self, inventory: demands + supplies, capital: capital)
-    }
-
-    func randomBasePrices() -> [Product: Money] {
-        Product.allCases.reduce(into: [:], { $0[$1] = $1.props.quality.randomPrice })
     }
 }
 
