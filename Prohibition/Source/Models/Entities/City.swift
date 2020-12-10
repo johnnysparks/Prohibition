@@ -58,23 +58,18 @@ enum City: String, CaseIterable, Identifiable {
             }
         }
 
-        /// 1 = all available, 0.1 = ~10% available
-        var resourceAvailability: Float {
+        var citizens: Int {
             switch self {
-            case .town:
-                return 0.05
-            case .city:
-                return 0.1
-            case .majorCity:
-                return 0.2
-            case .metropolis:
-                return 0.3
-            case .megalopolis:
-                return 0.5
+            case .town: return 2
+            case .city: return 3
+            case .majorCity: return 5
+            case .metropolis: return 8
+            case .megalopolis: return 13
             }
         }
     }
 
+    // TODO: Maybe drop
     enum GrowthRate {
         case decline // - 10%
         case steady  // no change
@@ -135,26 +130,4 @@ enum City: String, CaseIterable, Identifiable {
 
 extension City: RandomExample {
     static func random() -> City { Self.allCases.randomElement() ?? .nashville }
-}
-
-extension City.Size {
-    var citizens: Int {
-        switch self {
-        case .town: return 1
-        case .city: return 2
-        case .majorCity: return 3
-        case .metropolis: return 5
-        case .megalopolis: return 7
-        }
-    }
-
-    var resources: Int {
-        switch self {
-        case .town: return 1
-        case .city: return 1
-        case .majorCity: return 2
-        case .metropolis: return 3
-        case .megalopolis: return 5
-        }
-    }
 }

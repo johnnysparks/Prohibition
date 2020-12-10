@@ -64,7 +64,7 @@ private let kColors: [Color] = [.red, .green, .blue, .orange, .pink, .purple]
 
 private extension AppState {
     var entityListView: EntityListViewState {
-        .init(entities: self.entities.filter(\.isCitizen).compactMap { self.entityDetailState(for: $0) })
+        .init(entities: self.entities.compactMap { self.entityDetailState(for: $0) })
     }
 
     func entityDetailState(for entity: Entity) -> EntityDetailState? {
@@ -80,9 +80,9 @@ private extension AppState {
 
         return .init(
             entity: entity,
-            name: "\(entity.displayName) from \(city.name)",
-            icon: "person.fill",
-            color: kColors[abs(entity.displayName.hash) % kColors.count],
+            name: "\(entity.name) from \(city.name)",
+            icon: entity.personality.props.icon,
+            color: kColors[abs(entity.name.hash) % kColors.count],
             inventory: "\(unique) products, \(total) total items",
             money: (self.capital[entity] ?? 0).display)
     }

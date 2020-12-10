@@ -44,6 +44,7 @@ struct ProhibitionApp: App {
                 .font(.headline)
                 .onAppear {
                     store.send(.load(.random()))
+                    store.send(.gameTick(Date()))
                 }
             }
         }

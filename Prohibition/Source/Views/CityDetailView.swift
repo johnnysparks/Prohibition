@@ -16,17 +16,24 @@ struct CityDetailState: Equatable, Identifiable {
         let description: String
     }
 
+    struct IconState: Equatable, Hashable {
+        let id: String
+        let name: String
+    }
+
     let name: String
     let city: City
     let population: String
     let isUserHere: Bool
-    let resourcesLabel: String
-    let tradersLabel: String
-    let resourcesCount: Int
-    let tradersCount: Int
+
+    let details: String
+
+    let supplyCount: Int
+    let demandCount: Int
     let sellNow: [OrderState]
     let buyNow: [OrderState]
     let travel: Travel?
+    let icons: [IconState]
 }
 
 struct CityDetailView: View {
@@ -59,14 +66,10 @@ struct CityDetailView: View {
                         Image(systemName: "person.3")
                         Text(state.population)
                     }
-                    HStack {
-                        Image(systemName: "hand.raised")
-                        Text(state.tradersLabel)
-                    }
 
                     HStack {
-                        Image(systemName: "flame")
-                        Text(state.resourcesLabel)
+                        Image(systemName: "hand.raised")
+                        Text(state.details)
                     }
 
                     NavigationLink(destination: PriceHistoryView(city: self.city, store: self.store)) {
@@ -116,19 +119,25 @@ struct CityDetailView: View {
 
 extension AppState {
     func cityDetailState(for city: City) -> CityDetailState {
-        let resourcesCount = self.inventories[city]?.keys.filter(\.isResource).count ?? 0
-        let tradersCount = self.inventories[city]?.keys.filter(\.isCitizen).count ?? 0
+        let suppliers: [CityDetailState.IconState] = self.inventories[city]?
+            .filter { $0.value.contains(where: \.isSupply) }
+            .map { .init(id: $0.key.id.uuidString + "flame", name: "flame") } ?? []
+
+        let demanders: [CityDetailState.IconState] = self.inventories[city]?
+            .filter { $0.value.contains(where: \.isDemand) }
+            .map { .init(id: $0.key.id.uuidString + "hand.raised", name: "hand.raised") } ?? []
+
         return .init(name: city.name,
               city: city,
               population: "pop. \(city.props.population)",
               isUserHere: self.userCity == city,
-              resourcesLabel: "\(resourcesCount) resources",
-              tradersLabel: "\(tradersCount) buyers/sellers",
-              resourcesCount: resourcesCount,
-              tradersCount: tradersCount,
+              details: "\(suppliers.count) resources \(demanders.count) buyers/sellers",
+              supplyCount: suppliers.count,
+              demandCount: demanders.count,
               sellNow: self.sellNow(in: city),
               buyNow: self.buyNow(in: city),
-              travel: self.userCity.map { Travel(entity: self.user, start: $0, end: city) }
+              travel: self.userCity.map { Travel(entity: self.user, start: $0, end: city) },
+              icons: suppliers + demanders
         )
     }
 

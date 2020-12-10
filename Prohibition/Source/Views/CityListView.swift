@@ -19,10 +19,15 @@ struct CityListView: View {
     var body: some View {
         WithViewStore(self.store.scope(state: \.cityListView)) { state in
             NavigationView {
-                List(state.cities, id: \.name.hashValue) { city in
-                    NavigationLink(destination: CityDetailView(city: city.city, store: self.store)) {
-                        self.cell(state: city)
+                ScrollView(.vertical) {
+                    LazyVGrid(columns: [GridItem()], alignment: .center, spacing: 10) {
+                        ForEach(state.cities, id: \.name.hashValue) { city in
+                            NavigationLink(destination: CityDetailView(city: city.city, store: self.store)) {
+                                self.cell(state: city)
+                            }
+                        }
                     }
+                    .frame(minHeight: 0, maxHeight: .infinity, alignment: .top)
                 }
                 .navigationTitle(state.title)
             }
@@ -30,42 +35,41 @@ struct CityListView: View {
     }
 
     private func cell(state: CityDetailState) -> some View {
-        VStack(alignment: .leading) {
-            HStack {
-                HStack(alignment: .top) {
-                    Text(state.name)
-                        .font(.subheadline)
-                        .bold()
+        HStack(alignment: .top) {
+            VStack(alignment: .leading) {
+                Text(state.name)
+                    .bold()
 
-                    Image(systemName: "person.circle")
-                        .font(.caption)
-                        .foregroundColor(.blue)
-                        .showIf(state.isUserHere)
-                }
-
-                Spacer()
-
-                HStack(alignment: .top, spacing: 0) {
-                    ForEach(0..<state.resourcesCount, id: \.self) { _ in
-                        Image(systemName: "flame")
-                            .font(.caption)
-                            .foregroundColor(.green)
-                            .padding(0)
-                    }
-
-                    ForEach(0..<state.tradersCount, id: \.self) { _ in
-                        Image(systemName: "hand.raised")
-                            .font(.caption)
-                            .foregroundColor(.purple)
-                            .padding(0)
-                    }
-                }
-                .frame(alignment: .topTrailing)
+                Text(state.population)
+                    .font(.caption)
             }
+            .padding(8)
 
-            Text(state.population)
+            Image(systemName: "person.circle")
                 .font(.caption)
+                .foregroundColor(.blue)
+                .showIf(state.isUserHere)
+                .padding(16)
+
+            Spacer()
+
+            self.icons(state: state)
+                .rotation3DEffect(.degrees(180), axis: (x: 0, y: 1, z: 0))
+                .padding(8)
         }
+    }
+
+    func icons(state: CityDetailState) -> some View {
+        LazyHGrid(rows: .init(repeating: .init(.fixed(8)), count: 3), alignment: .center, spacing: 2) {
+            ForEach(state.icons, id: \.id) { icon in
+                Image(systemName: icon.name)
+                    .font(.caption)
+                    .foregroundColor(icon.name == "flame" ? .purple : .green)
+                    .padding(0)
+                    .frame(minWidth: 8, maxWidth: .infinity)
+            }
+        }
+        .frame(minHeight: 0, maxHeight: 50, alignment: .top)
     }
 }
 

@@ -64,35 +64,18 @@ private extension City {
 
     var randomStarter: [EntityRecord] {
         return (0..<self.size.citizens).map { _ in self.randomCitizen() }
-            + (0..<self.size.resources).map { _ in self.randomResource() }
-    }
-
-    func randomResource() -> EntityRecord {
-        let entity = Entity.randomResource()
-
-        assert(entity.product != nil, "Expected product on a natural resource")
-
-        let product = entity.product ?? .random()
-
-        let supply = Inventory(product: product,
-                               brand: product.randomBrand,
-                               type: .supply,
-                               quantity: product.props.category.randomQuantity(),
-                               bid: product.props.quality.randomPrice)
-
-        return .init(entity: entity, city: self, inventory: [supply], capital: .random())
     }
 
     func randomCitizen() -> EntityRecord {
-        let demands: [Inventory] = (0..<3)
-            .map { _ in Product.random(in: .randomStarterCitizenDemand()) }
-            .map { .randomInventory($0, .demand) }
+        // Pent up energy at the start!
+        let entity = Entity.random()
+        let p = entity.personality
+        let capital = Money.random(in: p.props.capital)
 
-        let supplies: [Inventory] = (0..<3)
-            .map { _ in Product.random(in: .randomStarterResource()) }
-            .map { .randomInventory($0, .supply) }
+        let demands = (0..<3).compactMap { _ in p.randomInventory(type: .demand) }
+        let supplies = (0..<3).compactMap { _ in p.randomInventory(type: .supply) }
 
-        return .init(entity: .randomCitizen(), city: self, inventory: demands + supplies, capital: .random())
+        return .init(entity: entity, city: self, inventory: demands + supplies, capital: capital)
     }
 
     func randomBasePrices() -> [Product: Money] {
@@ -100,12 +83,18 @@ private extension City {
     }
 }
 
-private extension Inventory {
-    static func randomInventory(_ product: Product, _ type: InventoryType) -> Inventory {
-        .init(product: product,
-              brand: product.randomBrand,
-              type: type,
-              quantity: product.props.category.randomQuantity(),
-              bid: product.props.quality.randomPrice)
+private extension Personality {
+    func randomInventory(type: Inventory.InventoryType) -> Inventory? {
+        let categories = type == .supply ? self.props.produces : self.props.demands
+
+        guard let category = categories.randomElement() else { return nil }
+
+        let product = category.randomProduct()
+        let quantity = category.randomVolume()
+
+        guard quantity > 0 else { return nil }
+
+        return .init(product: product, brand: product.randomBrand, type: type,
+                     quantity: quantity, bid: product.props.quality.randomPrice)
     }
 }

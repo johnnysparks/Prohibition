@@ -24,6 +24,8 @@
 		F652CD76256FBD2000EB2E47 /* RandomExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = F652CD75256FBD2000EB2E47 /* RandomExample.swift */; };
 		F652CD81256FBD7600EB2E47 /* Production.swift in Sources */ = {isa = PBXBuildFile; fileRef = F652CD80256FBD7600EB2E47 /* Production.swift */; };
 		F67AD10A257C38F0009F8137 /* MarketSummary.swift in Sources */ = {isa = PBXBuildFile; fileRef = F67AD109257C38F0009F8137 /* MarketSummary.swift */; };
+		F67AD10E257CA776009F8137 /* Array+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F67AD10D257CA776009F8137 /* Array+Extensions.swift */; };
+		F67AD112257D5BEA009F8137 /* EventLogDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F67AD111257D5BEA009F8137 /* EventLogDetailView.swift */; };
 		F6B5F0E12571B0E100AE9E83 /* CityListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6B5F0E02571B0E100AE9E83 /* CityListView.swift */; };
 		F6B5F0E62574531000AE9E83 /* AppState+RandomLoading.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6B5F0E52574531000AE9E83 /* AppState+RandomLoading.swift */; };
 		F6B5F1002574E9B000AE9E83 /* AppAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6B5F0FF2574E9B000AE9E83 /* AppAction.swift */; };
@@ -65,6 +67,8 @@
 		F652CD75256FBD2000EB2E47 /* RandomExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RandomExample.swift; sourceTree = "<group>"; };
 		F652CD80256FBD7600EB2E47 /* Production.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Production.swift; sourceTree = "<group>"; };
 		F67AD109257C38F0009F8137 /* MarketSummary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarketSummary.swift; sourceTree = "<group>"; };
+		F67AD10D257CA776009F8137 /* Array+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Array+Extensions.swift"; sourceTree = "<group>"; };
+		F67AD111257D5BEA009F8137 /* EventLogDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventLogDetailView.swift; sourceTree = "<group>"; };
 		F6B5F0E02571B0E100AE9E83 /* CityListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CityListView.swift; sourceTree = "<group>"; };
 		F6B5F0E52574531000AE9E83 /* AppState+RandomLoading.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AppState+RandomLoading.swift"; sourceTree = "<group>"; };
 		F6B5F0FF2574E9B000AE9E83 /* AppAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppAction.swift; sourceTree = "<group>"; };
@@ -141,6 +145,7 @@
 			isa = PBXGroup;
 			children = (
 				F652CD75256FBD2000EB2E47 /* RandomExample.swift */,
+				F67AD10D257CA776009F8137 /* Array+Extensions.swift */,
 			);
 			path = Protocols;
 			sourceTree = "<group>";
@@ -159,6 +164,7 @@
 			isa = PBXGroup;
 			children = (
 				F6CCBDB9256B7B800089E125 /* EventLogView.swift */,
+				F67AD111257D5BEA009F8137 /* EventLogDetailView.swift */,
 				F6B5F0E02571B0E100AE9E83 /* CityListView.swift */,
 				F651C43D2578A92500C382C5 /* PriceHistoryView.swift */,
 				F6C3698925780A5C0041260E /* EntityListView.swift */,
@@ -372,12 +378,14 @@
 				F6CCBDBA256B7B800089E125 /* EventLogView.swift in Sources */,
 				F6CCBDB8256B7B800089E125 /* ProhibitionApp.swift in Sources */,
 				F6C3698A25780A5C0041260E /* EntityListView.swift in Sources */,
+				F67AD10E257CA776009F8137 /* Array+Extensions.swift in Sources */,
 				F651C43A25789F4400C382C5 /* SparkLineView.swift in Sources */,
 				F67AD10A257C38F0009F8137 /* MarketSummary.swift in Sources */,
 				F652CD6C256FA43800EB2E47 /* Trade.swift in Sources */,
 				F652CD71256FBB4900EB2E47 /* Inventory.swift in Sources */,
 				F652CD50256FA2AF00EB2E47 /* Brand.swift in Sources */,
 				F6B5F1002574E9B000AE9E83 /* AppAction.swift in Sources */,
+				F67AD112257D5BEA009F8137 /* EventLogDetailView.swift in Sources */,
 				F6B5F0E62574531000AE9E83 /* AppState+RandomLoading.swift in Sources */,
 				F6B5F117257502FC00AE9E83 /* Travel.swift in Sources */,
 				F62BA76C257769B100C7282C /* AppEnvironment.swift in Sources */,

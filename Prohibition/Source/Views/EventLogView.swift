@@ -8,78 +8,97 @@
 import ComposableArchitecture
 import SwiftUI
 
-struct EventLogView: View {
-    struct ViewState: Equatable {
-        let title = "Event Log"
-        let entries: [EntryView.ViewState]
-    }
+struct EventLogState: Equatable {
+    let title = "Event Log"
+    let entries: [EventLogEntryState]
+}
 
+struct EventLogEntryState: Equatable, Hashable {
+    let icon: String
+    let name: String
+    let title: String
+    let detail: String
+    let itemized: [String]
+}
+
+struct EventLogView: View {
     let store: Store<AppState, AppAction>
 
     var body: some View {
         WithViewStore(self.store.scope(state: \.viewState)) { state in
             NavigationView {
                 List(state.entries, id: \.hashValue) { entry in
-                    EntryView(state: entry)
+                    NavigationLink(destination: EventLogDetailView(state: entry)) {
+                        EventLogEntryView(state: entry)
+                    }
                 }
                 .navigationTitle(state.title)
-            }.onAppear {
-                state.send(.random())
             }
         }
     }
+}
 
-    struct EntryView: View {
-        struct ViewState: Equatable, Hashable {
-            let icon: String
-            let title: String
-            let detail: String
-        }
+struct EventLogEntryView: View {
+    var state: EventLogEntryState
 
-        var state: ViewState
+    var body: some View {
+        HStack(alignment: .top) {
+            Image(systemName: state.icon)
+                .font(.caption)
 
-        var body: some View {
-            HStack(alignment: .top) {
-                Image(systemName: state.icon)
+            VStack(alignment: .leading) {
+                Text(state.title)
                     .font(.caption)
+                    .bold()
 
-                VStack(alignment: .leading) {
-                    Text(state.title)
-                        .font(.caption)
-                        .bold()
-
-                    Text(state.detail)
-                        .font(.caption)
-                }
+                Text(state.detail)
+                    .font(.caption)
             }
         }
     }
 }
 
 private extension AppState {
-    var viewState: EventLogView.ViewState { .init(entries: self.events.map(\.viewState)) }
+    var viewState: EventLogState { .init(entries: self.events.map(\.viewState)) }
 }
 
 private extension AppAction {
-    var viewState: EventLogView.EntryView.ViewState {
+    var viewState: EventLogEntryState {
         switch self {
         case .production(let productions):
             return productions.viewState
-        case .trade(let trade):
-            return trade.viewState
+        case .trade(let trades):
+            return trades.viewState
         case .load(let state):
-            return .init(icon: "cart", title: "Setup markets", detail: "\(state.events.count) events loaded")
+            return .init(icon: "cart",
+                         name: "Restore Game",
+                         title: "Setup markets",
+                         detail: "\(state.events.count) events loaded",
+                         itemized: state.events.map(\.viewState.title))
         case .travel(let travel):
             return .init(icon: "airplane",
-                         title: "\(travel.entity.displayName) on the move",
-                         detail: "Went from \(travel.start.name) to \(travel.end.name)")
+                         name: "Travel",
+                         title: "\(travel.entity.name) is on the move",
+                         detail: "Went from \(travel.start.name) to \(travel.end.name)",
+                         itemized: [])
+        case .gameTick(let date):
+            return .init(icon: "clock",
+                         name: "Game tick",
+                         title: "Game ticked, trigger time-lapse events",
+                         detail: "Original time: \(date)", itemized: [])
         }
     }
 }
 
 private extension Array where Element == Production {
-    var viewState: EventLogView.EntryView.ViewState {
-        .init(icon: "hammer.fill", title: self.title, detail: self.detail)
+    var viewState: EventLogEntryState {
+        .init(
+            icon: "hammer.fill",
+            name: "Productions",
+            title: self.title,
+            detail: self.detail,
+            itemized: self.map { "\($0.entity.name) made \($0.inventory.quantity) \($0.inventory.product.displayName)" }
+        )
     }
 
     private var title: String { "\(qty) units of produced" }
@@ -89,14 +108,24 @@ private extension Array where Element == Production {
     private var entities: Int { Set(self.map(\.entity)).count }
 }
 
-private extension Trade {
-    var viewState: EventLogView.EntryView.ViewState {
-        .init(icon: "arrow.right.arrow.left",
-              title: "\(self.inventory.product.displayName) sold in \(self.city.name)!",
-              detail: "\(buyer.displayName) paid \(price.display) to \(seller.displayName) for \(qty) units")
+private extension Array where Element == Trade {
+    var viewState: EventLogEntryState {
+        .init(
+            icon: "arrow.right.arrow.left",
+            name: "Trades",
+            title: self.title,
+            detail: self.detail,
+            itemized: self.map {
+            "\($0.buyer.name) buys \($0.qty) \($0.product.displayName) @ \($0.price.display) from \($0.seller.name)"
+        })
     }
 
-    private var qty: Int { self.inventory.quantity }
+    private var title: String { "\(qty) items traded for \(value.display)" }
+    private var detail: String { "\(traders) exchanged \(products) products" }
+    private var value: Money { self.map({ Money($0.qty) * $0.price }).reduce(0, +) }
+    private var qty: Int { self.map(\.qty).reduce(0, +) }
+    private var products: Int { Set(self.map(\.product)).count }
+    private var traders: Int { Set(self.map(\.buyer)).count }
 }
 
 // MARK: Previews

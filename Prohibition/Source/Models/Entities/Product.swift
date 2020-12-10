@@ -13,6 +13,10 @@ enum Product: String, Equatable, CaseIterable {
         case equipment
 
         static func random() -> Product.Category { self.allCases.randomElement() ?? .consumable }
+
+        func randomProduct() -> Product {
+            Product.allCases.filter { $0.props.category == self }.randomElement() ?? .beer
+        }
     }
 
     enum Quality: CaseIterable, Equatable {
@@ -180,9 +184,6 @@ enum Product: String, Equatable, CaseIterable {
 
 extension Product: RandomExample {
     static func random() -> Self { self.allCases.randomElement() ?? .beer }
-    static func random(in category: Category) -> Self {
-        self.allCases.filter { $0.props.category == category }.randomElement() ?? .beer
-    }
 }
 
 extension Product {
@@ -192,64 +193,6 @@ extension Product {
             return nil
         case .consumable:
             return Brand.random()
-        }
-    }
-}
-
-extension Product.Category {
-    func randomQuantity() -> Int {
-        switch self {
-        case .ingredient:
-            return Int.random(in: 1...7)
-        case .consumable:
-            return Int.random(in: 1...5)
-        case .equipmentParts:
-            return Int.random(in: 1...3)
-        case .equipment:
-            return Int.random(in: 1...2)
-        }
-    }
-
-    func randomProduction() -> Int {
-        switch self {
-        case .ingredient:
-            return Int.random(in: 0...3)
-        case .consumable:
-            return Int.random(in: 0...2) == 0 ? 1 : 0
-        case .equipmentParts:
-            return Int.random(in: 0...5) == 0 ? 1 : 0
-        case .equipment:
-            return Int.random(in: 0...25) == 0 ? 1 : 0
-        }
-    }
-
-    static func randomStarterCitizenDemand() -> Product.Category {
-        switch Int.random(in: 0...100) {
-        case 0..<60:
-            return .consumable
-        case 60..<70:
-            return .ingredient
-        case 70..<80:
-            return .equipmentParts
-        case 80...100:
-            return .equipment
-        default:
-            return .ingredient
-        }
-    }
-
-    static func randomStarterResource() -> Product.Category {
-        switch Int.random(in: 0...100) {
-        case 0..<75:
-            return .ingredient
-        case 70..<85:
-            return .consumable
-        case 85..<95:
-            return .equipmentParts
-        case 95...100:
-            return .equipment
-        default:
-            return .ingredient
         }
     }
 }

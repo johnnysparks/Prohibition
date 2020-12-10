@@ -27,7 +27,7 @@ extension AppState {
     func productionTick() -> [Production] {
         var productions = [Production]()
         self.inventories.forEach { city, entityInventories in
-            entityInventories.filter(\.key.isResource).forEach { entity, inventories in
+            entityInventories.forEach { entity, inventories in
                 let entityProductions = inventories
                     .filter(\.isSupply)
                     .compactMap { $0.production(city: city, entity: entity) }
@@ -41,7 +41,7 @@ extension AppState {
 
 private extension Inventory {
     var productionInventory: Inventory? {
-        let qty = self.product.props.category.randomProduction()
+        let qty = self.product.props.category.randomVolume()
         return qty > 0 ? .init(product: self.product, brand: self.brand, type: self.type, quantity: qty,
                                bid: self.bid) : nil
     }

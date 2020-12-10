@@ -10,14 +10,15 @@ import Foundation
 // MARK: - Actions
 
 enum AppAction: Equatable {
-    case trade(Trade)
+    case trade([Trade])
     case production([Production])
     case load(AppState)
     case travel(Travel)
+    case gameTick(Date)
 }
 
 extension AppAction: RandomExample {
     static func random() -> Self {
-        Bool.random() ? .trade(.random()) : .production([.random()])
+        Bool.random() ? .trade([.random()]) : .production([.random()])
     }
 }

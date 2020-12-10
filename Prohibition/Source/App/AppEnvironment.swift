@@ -7,21 +7,14 @@
 
 import ComposableArchitecture
 
-typealias RandomEventProducer = (TimeInterval, AnySchedulerOf<DispatchQueue>) -> Effect<AppAction, Never>
 typealias GameTickProducer = (TimeInterval, AppState, AnySchedulerOf<DispatchQueue>) -> Effect<AppAction, Never>
 
 struct AppEnvironment {
     var mainQueue: AnySchedulerOf<DispatchQueue> = DispatchQueue.main.eraseToAnyScheduler()
 
-    var produceAfter: GameTickProducer = { sec, state, scheduler in
-        Effect<AppAction, Never>(value: .production(state.productionTick()))
+    var gameTick: GameTickProducer = { sec, state, scheduler in
+        Effect<AppAction, Never>(value: .gameTick(Date()))
             .delay(for: .seconds(sec), scheduler: scheduler)
             .eraseToEffect()
     }
-
-//    var tradeAfter: GameTickProducer = { sec, state, scheduler in
-//        Effect<AppAction, Never>(value: .production(state.productionTick()))
-//            .delay(for: .seconds(sec), scheduler: scheduler)
-//            .eraseToEffect()
-//    }
 }

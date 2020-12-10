@@ -49,85 +49,80 @@ private func randomName() -> String {
     return "\(first) \(last)."
 }
 
-struct Entity: Equatable, Hashable, RandomExample, Identifiable {
-    enum EntityType: Equatable, Hashable {
-        case citizen(name: String)
-        case resource(product: Product)
-        case user
-    }
-
+struct Entity: Equatable, Hashable, Identifiable {
     let id: UUID
-    let type: EntityType
+    let name: String
     let personality: Personality
 
-    static let newUser = Entity(id: UUID(), type: .user, personality: .user)
+    static let newUser = Entity(id: UUID(), name: "PLAYER", personality: .user)
+}
 
-    static func random() -> Self { Bool.random() ? .randomCitizen() : .randomResource() }
-
-    static func randomCitizen() -> Self {
-        .init(id: UUID(), type: .citizen(name: randomName()), personality: .random())
-    }
-
-    static func randomResource() -> Self {
-        .init(id: UUID(),
-              type: .resource(product: Product.random(in: .randomStarterResource())),
-              personality: .random())
-    }
-
-    var displayName: String {
-        switch self.type {
-        case .citizen(let name):
-            return name
-        case .resource(let product):
-            return product.displayName
-        case .user:
-            return "PLAYER"
-        }
-    }
-
-    var isResource: Bool {
-        if case .resource = self.type {
-            return true
-        } else {
-            return false
-        }
-    }
-
-    var isUser: Bool {
-        if case .user = self.type {
-            return true
-        } else {
-            return false
-        }
-    }
-
-    var product: Product? {
-        if case .resource(let product) = self.type {
-            return product
-        } else {
-            return nil
-        }
-    }
-
-    var isCitizen: Bool {
-        if case .citizen = self.type {
-            return true
-        } else {
-            return false
-        }
+extension Entity: RandomExample {
+    static func random() -> Self {
+        .init(id: .init(), name: randomName(), personality: .random())
     }
 }
 
-enum Personality: CaseIterable, Equatable {
-    case alcoholic
-    case speculator
-    case machinist
-    case brewer
-    case user
+extension Entity: CustomDebugStringConvertible {
+    var debugDescription: String {
+        "\(self.name) - \(self.id), \(self.personality)"
+    }
+}
+
+enum Personality: String, CaseIterable, Equatable {
+    case alcoholic = "Alcoholic"
+    case brewer = "Brewer"
+    case farmer = "Farmer"
+    case machinist = "Machinist"
+    case miner = "Miner"
+    case speculator = "Speculator"
+    case user = "You"
+
+    var frequency: Float { self.props.frequency }
+    var produces: [Product.Category] { self.props.produces }
+    var demands: [Product.Category] { self.props.demands }
+
+    //swiftlint:disable line_length comma
+    var props: (icon: String, frequency: Float, capital: Range<Money>, produces: [Product.Category], demands: [Product.Category]) {
+        switch self {
+        case .alcoholic:    return ("drop.triangle",        0.1, 90_00..<100_00,    [],                [.consumable])
+        case .brewer:       return ("eyedropper.halffull",  0.5, 5_00..<10_00,      [.consumable],     [.ingredient])
+        case .farmer:       return ("sun.haze",             0.5, 1_00..<5_00,       [.ingredient],     [.equipment, .consumable])
+        case .machinist:    return ("wrench",               0.1, 5_00..<10_00,      [.equipment],      [.equipmentParts, .consumable])
+        case .miner:        return ("hammer",               0.3, 5_00..<10_00,      [.equipmentParts], [.consumable])
+        case .speculator:   return ("dollarsign.circle",    0.1, 500_00..<900_00,   [],                Product.Category.allCases)
+        case .user:         return ("person.circle",        0.0, 5_00..<10_00,      [],                [])
+        }
+    }
 }
 
 extension Personality: RandomExample {
-    static func random() -> Personality {
-        Self.allCases.randomElement() ?? .alcoholic
+    static func random() -> Self {
+        var bound: Float = 0
+        var ranges: [(Range<Float>, Personality)] = []
+
+        Personality.allCases.forEach {
+            let range = bound..<bound + $0.frequency
+            bound = range.upperBound
+            ranges.append((range, $0))
+        }
+
+        let random = Float.random(in: 0...bound)
+        return ranges.first(where: { $0.0.contains(random) })?.1 ?? .farmer
+    }
+}
+
+extension Product.Category {
+    func randomVolume() -> Int {
+        switch self {
+        case .ingredient:
+            return Int.random(in: 0...3)
+        case .consumable:
+            return Int.random(in: 0...2) == 0 ? 1 : 0
+        case .equipmentParts:
+            return Int.random(in: 0...5) == 0 ? 1 : 0
+        case .equipment:
+            return Int.random(in: 0...20) == 0 ? 1 : 0
+        }
     }
 }
