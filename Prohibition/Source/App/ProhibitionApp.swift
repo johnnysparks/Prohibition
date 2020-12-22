@@ -14,7 +14,6 @@ let appStore = Store<AppState, AppAction>(
     environment: AppEnvironment()
 )
 
-@main
 struct ProhibitionApp: App {
     var body: some Scene {
         WindowGroup {
@@ -22,7 +21,7 @@ struct ProhibitionApp: App {
                 TabView {
                     CityListView(store: appStore)
                         .tabItem {
-                            Image(systemName: "map")
+                            Image(systemName: "airplane")
                             Text("Cities")
                         }
                     EventLogView(store: appStore)

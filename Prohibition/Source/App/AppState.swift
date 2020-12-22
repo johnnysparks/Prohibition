@@ -66,7 +66,23 @@ extension AppState {
     var userCity: City? { self.locations[self.user] }
 
     // TODO - apply trades
-    mutating func apply(trades: [Trade]) {}
+    mutating func apply(trades: [Trade]) {
+        // Deduct sales and add purchases
+        for (city, entityInventories) in self.inventories {
+            for (entity, inventories) in entityInventories {
+                let next = inventories.map {
+                    $0.adding(quantity: trades.amountSold(of: $0.product, for: entity))
+                        .deducting(quantity: trades.amountBought(of: $0.product, for: entity))
+                }
+                self.inventories[city]?[entity] = next
+            }
+        }
+
+        // Update wallets
+        for (entity, money) in self.capital {
+            self.capital[entity] = money + trades.balanceChange(for: entity)
+        }
+    }
 
     mutating func apply(productions: [Production]) {
         // Build new inventories
@@ -98,12 +114,42 @@ private extension Inventory {
         .init(product: self.product, brand: self.brand, type: self.type, quantity: self.quantity + quantity,
               bid: self.bid)
     }
+
+    func deducting(quantity: Int) -> Inventory {
+        // TODO: Assert on negative inventory
+        .init(product: self.product, brand: self.brand, type: self.type, quantity: self.quantity - quantity,
+              bid: self.bid)
+    }
 }
 
 private extension Array where Element == Production {
     func supply(of product: Product, for entity: Entity) -> Int {
         self.reduce(0) {
             $0 + ($1.entity == entity && $1.inventory.product == product ? $1.inventory.quantity : 0)
+        }
+    }
+}
+
+private extension Array where Element == Trade {
+    func amountSold(of product: Product, for entity: Entity) -> Int {
+        self.reduce(0) { $0 + ($1.seller == entity && $1.product == product ? $1.qty : 0) }
+    }
+
+    func amountBought(of product: Product, for entity: Entity) -> Int {
+        self.reduce(0) { $0 + ($1.buyer == entity && $1.product == product ? $1.qty : 0) }
+    }
+
+    func balanceChange(for entity: Entity) -> Money {
+        self.reduce(0) { $0 + $1.balanceChange(for: entity) }
+    }
+}
+
+private extension Trade {
+    func balanceChange(for entity: Entity) -> Money {
+        switch entity {
+        case self.seller: return self.price * qty * -1
+        case self.buyer: return self.price * qty
+        default: return 0
         }
     }
 }

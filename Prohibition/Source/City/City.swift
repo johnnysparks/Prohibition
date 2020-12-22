@@ -7,7 +7,7 @@
 
 import ComposableArchitecture
 
-enum City: String, CaseIterable, Identifiable {
+enum City: String, Codable, CaseIterable, Identifiable {
     var id: String { self.rawValue }
 
     case cincinnati = "Cincinnati"

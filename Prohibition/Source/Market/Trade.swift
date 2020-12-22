@@ -81,6 +81,9 @@ extension AppState {
 // S3 sells 1 beer to B1 @ $7.00 (average price)
     // Demand empty. End market trades
 
+// TODO: Come up with a way to move prices after the trade.
+//  Re-randomize prices?
+
 class TradeTable {
     let city: City
     let product: Product

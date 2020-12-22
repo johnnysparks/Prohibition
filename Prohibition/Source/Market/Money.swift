@@ -7,7 +7,7 @@
 
 import Foundation
 
-typealias Money = UInt
+typealias Money = Int
 
 extension Money {
     var display: String {
