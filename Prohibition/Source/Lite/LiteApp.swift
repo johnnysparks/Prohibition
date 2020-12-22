@@ -38,11 +38,33 @@ enum MarketPrice: Int {
         default: return .veryLow
         }
     }
+
+    var sellColor: Color {
+        switch self {
+        case .veryLow: return .red
+        case .low: return .black
+        case .average: return .black
+        case .high: return .black
+        case .veryHigh: return .green
+        }
+    }
+
+    var buyColor: Color {
+        switch self {
+        case .veryLow: return .green
+        case .low: return .black
+        case .average: return .black
+        case .high: return .black
+        case .veryHigh: return .red
+        }
+    }
+
+    var display: String { "$\(self.rawValue)" }
 }
 
 struct LiteEnvironment {}
 
-struct Wallet: Equatable {
+struct Wallet: Equatable, Codable {
     var stock: Int
     var money: Int
 
@@ -50,8 +72,8 @@ struct Wallet: Equatable {
     var isStockEmpty: Bool { self.stock <= 0 }
 }
 
-struct Game: Equatable {
-    enum RunState {
+struct Game: Equatable, Codable {
+    enum RunState: Int, Equatable, Codable {
         case unstarted
         case running
         case ended
@@ -75,6 +97,7 @@ struct Game: Equatable {
 }
 
 struct LiteState: Equatable {
+    var highScores: [Int] = []
     var last: Game?
     var current = Game()
 }
@@ -82,6 +105,8 @@ struct LiteState: Equatable {
 enum GameAction {
     case loadGame
     case newGame
+    case cacheWrite
+    case cacheRestore
 }
 
 enum PlayerAction {
@@ -110,12 +135,30 @@ let liteReducer = Reducer<LiteState, LiteAction, LiteEnvironment> { state, actio
         case .newGame:
             state.current = Game()
             state.current.runState = .running
+
+        case .cacheRestore:
+            guard let encodedGame = UserDefaults.standard.value(forKey: "game") as? Data,
+                  let game = try? JSONDecoder().decode(Game.self, from: encodedGame) else { break }
+
+            guard let encodedScores = UserDefaults.standard.value(forKey: "highScores") as? Data,
+                  let scores = try? JSONDecoder().decode([Int].self, from: encodedScores) else { break }
+
+            state.last = game
+            state.highScores = scores
+
+        case .cacheWrite:
+            guard let encodedGame = try? JSONEncoder().encode(state.current) else { break }
+            UserDefaults.standard.setValue(encodedGame, forKey: "game")
+
+            guard let encodedScores = try? JSONEncoder().encode(state.highScores) else { break }
+            UserDefaults.standard.setValue(encodedScores, forKey: "highScores")
         }
 
     case .play(let playAction):
         switch playAction {
         case .travel(let city):
             guard state.current.turnsLeft > 0 else {
+                state.highScores.append(state.current.player.money)
                 state.current.runState = .ended
                 break
             }
@@ -149,10 +192,24 @@ let liteStore = Store<LiteState, LiteAction>(
 
 @main
 struct LiteApp: App {
+    @Environment(\.scenePhase) private var scenePhase
+
     var body: some Scene {
         WindowGroup {
             WithViewStore(liteStore.scope(state: \.current.runState)) { store in
                 self.screen(for: store.state)
+            }
+        }
+        .onChange(of: self.scenePhase) { phase in
+            switch phase {
+            case .active:
+                ViewStore(liteStore).send(.game(.cacheRestore))
+            case .background:
+                ViewStore(liteStore).send(.game(.cacheWrite))
+            case .inactive:
+                break
+            @unknown default:
+                print("Unknown ScenePhase change.")
             }
         }
     }

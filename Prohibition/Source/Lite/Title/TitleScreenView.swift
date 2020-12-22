@@ -36,5 +36,5 @@ struct TitleScreenView: View {
 }
 
 private extension LiteState {
-    var noSaveGame: Bool { self.last == nil }
+    var noSaveGame: Bool { self.last == nil || self.last?.runState == .ended }
 }

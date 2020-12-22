@@ -17,22 +17,32 @@ struct GameScreenView: View {
     var body: some View {
         WithViewStore(self.appStore.scope(state: \.gameState)) { store in
             VStack(alignment: .center, spacing: 8) {
-                HStack {
+                HStack(alignment: .top) {
                     VStack(alignment: .leading) {
                         Text(store.state.playerMoney)
                         Text(store.state.playerStock)
                     }
 
+                    Spacer()
+
                     Text(store.state.turnsRemaining)
                 }
+                .frame(maxWidth: .infinity)
+                .padding(8)
 
                 Text(store.state.playerLocation)
+                    .bold()
 
-                self.buySegment(state: store.state) { store.send($0) }
-
-                self.sellSegment(state: store.state) { store.send($0) }
+                VStack(alignment: .center) {
+                    self.buySegment(state: store.state) { store.send($0) }
+                    self.sellSegment(state: store.state) { store.send($0) }
+                }
+                .padding(8)
 
                 self.cityList(cities: store.cities) { store.send($0) }
+                    .padding(8)
+
+                Spacer()
             }
             .padding(8)
         }
@@ -40,7 +50,7 @@ struct GameScreenView: View {
 
     private func sellSegment(state: GameState, send: @escaping ((LiteAction) -> Void)) -> some View {
         HStack {
-            // demand
+            Image(systemName: "dollarsign.circle")
 
             Text("$\(state.current.totalSellPrice(for: self.sellQty))")
 
@@ -57,6 +67,8 @@ struct GameScreenView: View {
 
     private func buySegment(state: GameState, send: @escaping ((LiteAction) -> Void)) -> some View {
         HStack {
+            Image(systemName: "cart.badge.plus")
+
             // demand
             Text("$\(state.current.totalBuyPrice(for: self.buyQty))")
 
@@ -78,14 +90,25 @@ struct GameScreenView: View {
                     Text(city.name)
                         .frame(maxWidth: .infinity, alignment: .leading)
 
-                    Text(city.summary)
+                    Image(systemName: "cart.badge.plus")
+                        .font(.caption)
+
+                    Text(city.buy.display)
+                        .foregroundColor(city.buy.buyColor)
+                        .frame(width: 30)
+
+                    Image(systemName: "dollarsign.circle")
+                        .font(.caption)
+
+                    Text(city.sell.display)
+                        .foregroundColor(city.sell.sellColor)
+                        .frame(width: 30)
 
                     // button
                     Button("Go") {
                         send(.play(.travel(city.city)))
                     }
                 }
-                .padding([.leading, .trailing], 8)
             }
         }
     }
@@ -98,7 +121,8 @@ struct GameState: Equatable {
         let name: String
         let stock: Int
 
-        var summary: String { "\(self.stock) @ $\(MarketPrice.buyPrice(for: self.stock).rawValue)" }
+        var sell: MarketPrice { .sellPrice(for: self.stock) }
+        var buy: MarketPrice { .buyPrice(for: self.stock) }
 
         func totalSellPrice(for qty: Int) -> Int {
             var total = 0
@@ -158,6 +182,6 @@ private extension LiteState {
               playerWallet: self.current.player, turnsRemaining: "Weeks remaining \(self.current.turnsLeft)",
               playerMoney: "Funds $\(self.current.player.money)",
               playerStock: "Stock \(self.current.player.stock)",
-              playerLocation: "Currently in: \(self.current.location.rawValue)")
+              playerLocation: "Currently in \(self.current.location.rawValue)")
     }
 }
