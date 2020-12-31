@@ -190,7 +190,7 @@ let liteStore = Store<LiteState, LiteAction>(
     environment: LiteEnvironment()
 )
 
-@main
+//@main
 struct LiteApp: App {
     @Environment(\.scenePhase) private var scenePhase
 

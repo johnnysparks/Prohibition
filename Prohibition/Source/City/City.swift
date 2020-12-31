@@ -6,6 +6,7 @@
 //
 
 import ComposableArchitecture
+import CoreGraphics
 
 enum City: String, Codable, CaseIterable, Identifiable {
     var id: String { self.rawValue }
@@ -124,6 +125,34 @@ enum City: String, Codable, CaseIterable, Identifiable {
         case .knoxvile: return (77_818, .steady)
         case .charlotte: return (46_000, .growing)
         case .jacksonville: return (91_558, .steady)
+        }
+    }
+
+    var gps: CGPoint {
+        switch self {
+        case .newYork: return .init(x: -73.935242, y: 40.730610)
+        case .chicago: return .init(x: -87.623177, y: 41.881832)
+        case .philadelphia: return .init(x: -75.165222, y: 39.952583)
+        case .detroit: return .init(x: -83.045753, y: 42.331429)
+        case .cleveland: return .init(x: -81.681290, y: 41.505493)
+        case .boston: return .init(x: -71.057083, y: 42.361145)
+        case .baltimore: return .init(x: -76.609383, y: 39.299236)
+        case .pittsburgh: return .init(x: -79.995888, y: 40.440624)
+        case .losAngeles: return .init(x: -118.243683, y: 34.052235)
+        case .sanFrancisco: return .init(x: -122.431297, y: 37.773972)
+        case .milwaukee: return .init(x: -87.906471, y: 43.038902)
+        case .cincinnati: return .init(x: -84.512016, y: 39.103119)
+        case .indianapolis: return .init(x: -86.148003, y: 39.791000)
+        case .stLouis: return .init(x: -90.199402, y: 38.627003)
+        case .columbus: return .init(x: -82.983330, y: 39.983334)
+        case .louisville: return .init(x: -85.764771, y: 38.328732)
+        case .oakland: return .init(x: -122.271111, y: 37.804363)
+        case .atlanta: return .init(x: -84.386330, y: 33.753746)
+        case .richmond: return .init(x: -77.434769, y: 37.541290)
+        case .nashville: return .init(x: -86.767960, y: 36.174465)
+        case .knoxvile: return .init(x: -83.926453, y: 35.964668)
+        case .charlotte: return .init(x: -80.843124, y: 35.227085)
+        case .jacksonville: return .init(x: -81.655647, y: 30.332184)
         }
     }
 }
