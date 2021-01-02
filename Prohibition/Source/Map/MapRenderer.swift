@@ -43,7 +43,10 @@ class MapRenderer {
     /// All the data to be drawn on the map
     var gpsElements: [MapElement] { self.borderElements + self.cityElements }
 
-    var borders: [MapElement] { self.borderElements.map { $0.element(inContext: self.ctx) } }
+    var borders: [MapElement] {
+        self.borderElements
+            .map { $0.element(inContext: self.ctx) }
+    }
 
     var debugBorders: [MapElement] {
         self.borderData.gpsLines

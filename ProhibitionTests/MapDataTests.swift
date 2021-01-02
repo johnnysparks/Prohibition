@@ -34,22 +34,4 @@ class MapTests: XCTestCase {
         XCTAssertEqual(minX, 0, accuracy: 0.01)
         XCTAssertEqual(maxX, 100, accuracy: 0.01)
     }
-
-    func testStatePolygons() {
-        let map = MapData(scale: .init(width: 100, height: 100), stateCollection: .continuous)
-        XCTAssertEqual(280, map.scaledStatePolygonLines.count)
-    }
-
-    func testTotalStatePolygonPoints() {
-        let map = MapData(scale: .init(width: 100, height: 100), stateCollection: .continuous)
-        XCTAssertEqual(75140, map.scaledStatePolygonLines.flatMap({ $0 }).count)
-    }
-
-    func testLineLengths() {
-        let map = MapData(scale: .init(width: 100, height: 100), stateCollection: .continuous)
-
-        print(map.lineLengths)
-
-        XCTAssertEqual(280, map.lineLengths.count)
-    }
 }

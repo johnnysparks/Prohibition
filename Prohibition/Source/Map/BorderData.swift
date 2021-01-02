@@ -51,6 +51,52 @@ class BorderData {
             .flatMap { $0 }
     }
 
+    var tiles: [HexGrid.Cell] { self.stateTiles.flatMap { $0 } }
+    var hexPaths: [CGPath] {
+        self.stateTiles.map { tiles in
+            let p = CGMutablePath()
+            let paths = tiles.compactMap { self.hexGrid.corners(for: $0).map(\.point).toCGPath }
+            paths.forEach { p.addPath($0) }
+            return p as CGPath
+        }
+        .filter(\.boundingBox.isDrawable)
+    }
+
+    var hexMappableStates: [HexMappableState] {
+        self.stateData
+            .filter { self.stateCollection.includes(stateName: $0.properties.NAME) }
+            .compactMap { state -> HexMappableState? in
+                let myTiles = state.geometry
+                    .coordinates
+                    .invertedLatitudes
+                    .cgPaths
+                    .compactMap { self.hexGrid.cells(intersecting: $0) }
+                    .flatMap { $0 }
+
+                guard !myTiles.isEmpty else { return nil }
+
+                let focusQ = Int(round(Double(myTiles.map(\.q).reduce(0, +)) / Double(myTiles.count)))
+                let focusR = Int(round(Double(myTiles.map(\.r).reduce(0, +)) / Double(myTiles.count)))
+
+                return HexMappableState(grid: self.hexGrid,
+                                        cells: Set(myTiles),
+                                        focus: HexGrid.Cell(q: focusQ, r: focusR),
+                                        description: state.properties.NAME,
+                                        path: self.hexGrid.path(for: myTiles)!)
+            }
+    }
+
+    private var stateTiles: [[HexGrid.Cell]] {
+        // A hex is a part of a state if the center is inside the state border path
+        self.stateData
+            .filter { self.stateCollection.includes(stateName: $0.properties.NAME) }
+            .map { $0.geometry.coordinates }
+            .map { $0.invertedLatitudes }
+            .map { $0.cgPaths }
+            .flatMap { $0 }
+            .map { self.hexGrid.cells(intersecting: $0) }
+    }
+
     private var stateGeometriesUrl: URL? {
         Bundle.main.url(forResource: "states", withExtension: "json")
     }
@@ -159,6 +205,14 @@ extension BorderData {
 // MARK: - Poly Reduction
 
 extension Array where Element == BorderData.Polygon {
+    var invertedLatitudes: [BorderData.Polygon] {
+        self.map { $0.map(\.invertedLatitudes) }
+    }
+
+    var cgPaths: [CGPath] {
+        self.map { $0.compactMap(\.toCGPath) }.flatMap { $0 }
+    }
+
     func continuous(resolution: CGFloat) -> [BorderData.Polygon] {
         self.map { $0.map { $0.continuous(resolution: resolution) } }
     }
@@ -177,6 +231,16 @@ extension Array where Element == BorderData.Polygon {
 }
 
 extension Array where Element == CGPoint {
+    var invertedLatitudes: Self { self.map(\.invertedLatitude) }
+
+    var toCGPath: CGPath? {
+        guard let first = self.first else { return nil }
+        let p = CGMutablePath()
+        p.move(to: first)
+        p.addLines(between: self)
+        return p
+    }
+
     func continuous(resolution: CGFloat) -> [CGPoint] {
         var out: [CGPoint] = []
 
@@ -203,7 +267,7 @@ extension Array where Element == CGPoint {
         var out: [CGPoint] = []
         for point in self {
             // move halfway to the nearest corner
-            guard let corner = hexGrid.corner(near: point) else { continue }
+            let corner = hexGrid.corner(near: point)
 
             let midpoint = point.midpoint(to: corner.point)
             out.append(midpoint)
@@ -216,7 +280,7 @@ extension Array where Element == CGPoint {
         var nearestCorners = [HexGrid.Corner: (offset: Int, element: CGPoint)]()
 
         for point in self.enumerated() {
-            guard let corner = hexGrid.corner(near: point.element) else { continue }
+            let corner = hexGrid.corner(near: point.element)
 
             guard let last = nearestCorners[corner] else {
                 nearestCorners[corner] = point
@@ -232,17 +296,16 @@ extension Array where Element == CGPoint {
     }
 
     func simplifyNeighbors(hexGrid: HexGrid) -> [CGPoint]? {
-        guard let first = self.first,
-              var last = hexGrid.corner(near: first) else { return nil }
+        guard let first = self.first else { return nil }
 
+        var last = hexGrid.corner(near: first)
         var cornerPath: [HexGrid.Corner] = []
 
         cornerPath.append(last)
 
         for point in self {
             // add the *nearest* neighbor of last to the list and make it "last"
-            let next = last
-                .neighbors(for: hexGrid.size)
+            let next = hexGrid.neighbors(of: last)
                 .min(by: { $0.point.distance(to: point) < $1.point.distance(to: point) })!
 
             cornerPath.append(next)
@@ -297,5 +360,22 @@ extension Array where Element == HexGrid.Corner {
         }
 
         return deduped
+    }
+}
+
+extension CGRect {
+    var area: CGFloat { self.height * self.width }
+    var isDrawable: Bool { self.area > 0 && self.area < 99999999 }
+}
+
+extension CGPoint {
+    var invertedLatitude: CGPoint { .init(x: self.x, y: -self.y + 180) }
+}
+
+extension Array where Element == CGPath {
+    var union: CGPath {
+        let p = CGMutablePath()
+        self.forEach { p.addPath($0) }
+        return p as CGPath
     }
 }

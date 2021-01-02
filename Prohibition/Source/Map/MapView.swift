@@ -11,11 +11,8 @@ import SwiftUI
 struct MapDataView: View {
     var hexSize: Binding<CGFloat>
 
-    let cities: [City] = [.stLouis, .nashville, .atlanta, .columbus, .pittsburgh, .philadelphia, .newYork]
-
-//    let cities: [City] = [.sanFrancisco, .losAngeles]
-//    let cities: [City] = []
-
+//    let cities: [City] = [.stLouis, .nashville, .atlanta, .columbus, .pittsburgh, .philadelphia, .newYork]
+    let cities: [City] = [.newYork]
     let screenSize: CGSize
 
     init(screenSize: CGSize, hexSize: Binding<CGFloat>) {
@@ -25,7 +22,7 @@ struct MapDataView: View {
 
     var body: some View {
         let hexGrid = HexGrid(size: self.hexSize.wrappedValue, orientation: .pointy)
-        let borderData = BorderData(stateCollection: .eastern, hexGrid: hexGrid)
+        let borderData = BorderData(stateCollection: .jersey, hexGrid: hexGrid)
         let renderer = MapRenderer(screenSize: self.screenSize,
                                    hexGrid: hexGrid,
                                    border: borderData,
@@ -48,16 +45,16 @@ struct MapDataView: View {
 
         var body: some View {
             ZStack {
-                ForEach(self.mapPaths, id: \.self) { path in
-                    path
-                        .fill(Color.green)
-                        .opacity(0.25)
-                }
+//                ForEach(self.mapPaths, id: \.self) { path in
+//                    path
+//                        .fill(Color.green)
+//                        .opacity(0.25)
+//                }
 
                 ForEach(self.mapPaths, id: \.self) { path in
                     path
                         .stroke(lineWidth: 1)
-                        .foregroundColor(.black)
+                        .foregroundColor(.blue)
                 }
             }
         }
