@@ -14,8 +14,6 @@ class BorderData {
     /// The snapping and resolution of the borders
     let hexGrid: HexGrid
 
-    lazy var gpsLines: [Line] = { self.collectionPolygons.flatMap { $0 } }()
-
     init(stateCollection: StateCollection, hexGrid: HexGrid) {
         self.stateCollection = stateCollection
         self.hexGrid = hexGrid
@@ -35,31 +33,6 @@ class BorderData {
         }
 
         return allStates
-    }
-
-    var collectionPolygons: [Polygon] {
-        self.stateData
-            .filter { self.stateCollection.includes(stateName: $0.properties.NAME) }
-            .map { $0.geometry.coordinates }
-            .map { $0.continuous(resolution: self.hexGrid.size) }
-            .map { $0.nudged(hexGrid: self.hexGrid) }
-            .map { $0.continuous(resolution: self.hexGrid.size) }
-            .map { $0.nudged(hexGrid: self.hexGrid) }
-            .map { $0.continuous(resolution: self.hexGrid.size) }
-            .map { $0.nudged(hexGrid: self.hexGrid) }
-            .map { $0.simplifyNeighbors(hexGrid: self.hexGrid) }
-            .flatMap { $0 }
-    }
-
-    var tiles: [HexGrid.Cell] { self.stateTiles.flatMap { $0 } }
-    var hexPaths: [CGPath] {
-        self.stateTiles.map { tiles in
-            let p = CGMutablePath()
-            let paths = tiles.compactMap { self.hexGrid.corners(for: $0).map(\.point).toCGPath }
-            paths.forEach { p.addPath($0) }
-            return p as CGPath
-        }
-        .filter(\.boundingBox.isDrawable)
     }
 
     var hexMappableStates: [HexMappableState] {
@@ -86,23 +59,8 @@ class BorderData {
             }
     }
 
-    private var stateTiles: [[HexGrid.Cell]] {
-        // A hex is a part of a state if the center is inside the state border path
-        self.stateData
-            .filter { self.stateCollection.includes(stateName: $0.properties.NAME) }
-            .map { $0.geometry.coordinates }
-            .map { $0.invertedLatitudes }
-            .map { $0.cgPaths }
-            .flatMap { $0 }
-            .map { self.hexGrid.cells(intersecting: $0) }
-    }
-
     private var stateGeometriesUrl: URL? {
         Bundle.main.url(forResource: "states", withExtension: "json")
-    }
-
-    var lineLengths: [Int] {
-        self.collectionPolygons.flatMap({ $0 }).map(\.count)
     }
 }
 
@@ -212,22 +170,6 @@ extension Array where Element == BorderData.Polygon {
     var cgPaths: [CGPath] {
         self.map { $0.compactMap(\.toCGPath) }.flatMap { $0 }
     }
-
-    func continuous(resolution: CGFloat) -> [BorderData.Polygon] {
-        self.map { $0.map { $0.continuous(resolution: resolution) } }
-    }
-
-    func nudged(hexGrid: HexGrid) -> [BorderData.Polygon] {
-        self.map { $0.map { $0.nudged(hexGrid: hexGrid) } }
-    }
-
-    func dedupeNearestCorners(hexGrid: HexGrid) -> [BorderData.Polygon] {
-        self.map { $0.map { $0.dedupeNearestCorners(hexGrid: hexGrid) } }
-    }
-
-    func simplifyNeighbors(hexGrid: HexGrid) -> [BorderData.Polygon] {
-        self.map { $0.compactMap { $0.simplifyNeighbors(hexGrid: hexGrid) } }
-    }
 }
 
 extension Array where Element == CGPoint {
@@ -239,127 +181,6 @@ extension Array where Element == CGPoint {
         p.move(to: first)
         p.addLines(between: self)
         return p
-    }
-
-    func continuous(resolution: CGFloat) -> [CGPoint] {
-        var out: [CGPoint] = []
-
-        self.first.map { out.append($0) }
-
-        for idx in 0..<self.count - 1 {
-            let last = self[idx]
-            let next = self[idx + 1]
-            let dist = last.distance(to: next)
-
-            if resolution < dist {
-                let segments = Int(ceil(dist / resolution))
-                let interpolated = last.interpolated(to: next, segments: segments)
-                out.append(contentsOf: interpolated)
-            }
-
-            out.append(next)
-        }
-
-        return out
-    }
-
-    func nudged(hexGrid: HexGrid) -> [CGPoint] {
-        var out: [CGPoint] = []
-        for point in self {
-            // move halfway to the nearest corner
-            let corner = hexGrid.corner(near: point)
-
-            let midpoint = point.midpoint(to: corner.point)
-            out.append(midpoint)
-        }
-
-        return out
-    }
-
-    func dedupeNearestCorners(hexGrid: HexGrid) -> [CGPoint] {
-        var nearestCorners = [HexGrid.Corner: (offset: Int, element: CGPoint)]()
-
-        for point in self.enumerated() {
-            let corner = hexGrid.corner(near: point.element)
-
-            guard let last = nearestCorners[corner] else {
-                nearestCorners[corner] = point
-                continue
-            }
-
-            if point.element.distance(to: corner.point) < last.element.distance(to: corner.point) {
-                nearestCorners[corner] = point
-            }
-        }
-
-        return nearestCorners.values.sorted(by: { $0.offset < $1.offset }).map(\.element)
-    }
-
-    func simplifyNeighbors(hexGrid: HexGrid) -> [CGPoint]? {
-        guard let first = self.first else { return nil }
-
-        var last = hexGrid.corner(near: first)
-        var cornerPath: [HexGrid.Corner] = []
-
-        cornerPath.append(last)
-
-        for point in self {
-            // add the *nearest* neighbor of last to the list and make it "last"
-            let next = hexGrid.neighbors(of: last)
-                .min(by: { $0.point.distance(to: point) < $1.point.distance(to: point) })!
-
-            cornerPath.append(next)
-            last = next
-        }
-
-        let outPoints = cornerPath
-            .simplified
-            .simplified
-            .simplified
-            .map(\.point)
-
-        // 5 or fewer points can't make a closed hexagon
-        return outPoints.count > 5 ? outPoints : nil
-    }
-}
-
-extension Array where Element == HexGrid.Corner {
-    var simplified: Self {
-        guard self.count > 2 else { return [] }
-
-        // finally trim all loose "leaves"
-        var trimmed: [HexGrid.Corner] = []
-
-        self.first.map { trimmed.append($0) }
-
-        for idx in 1..<self.count - 1 {
-            let last = self[idx - 1]
-            let point = self[idx]
-            let next = self[idx + 1]
-
-            // If we have two _distinct_ neighbors, then it's safe to keep
-            if last != next {
-                trimmed.append(point)
-            }
-        }
-
-        self.last.map { trimmed.append($0) }
-
-        var deduped: [HexGrid.Corner] = []
-
-        trimmed.first.map { deduped.append($0) }
-
-        for idx in 1..<trimmed.count {
-            let last = trimmed[idx - 1]
-            let point = trimmed[idx]
-
-            // If we have two _distinct_ neighbors, then it's safe to keep
-            if last != point {
-                deduped.append(point)
-            }
-        }
-
-        return deduped
     }
 }
 

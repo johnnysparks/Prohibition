@@ -7,13 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		F61A66AB25969C0D0088D7EF /* LegacyMapData.swift in Sources */ = {isa = PBXBuildFile; fileRef = F61A66AA25969C0D0088D7EF /* LegacyMapData.swift */; };
-		F6218F16258EBEFA00B18F0E /* MapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6218F15258EBEFA00B18F0E /* MapView.swift */; };
 		F6218F1B2590029000B18F0E /* TitleScreenView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6218F1A2590029000B18F0E /* TitleScreenView.swift */; };
 		F6218F1F2590046000B18F0E /* LiteApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6218F1E2590046000B18F0E /* LiteApp.swift */; };
 		F6218F2625900D6F00B18F0E /* GameOverScreenView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6218F2525900D6F00B18F0E /* GameOverScreenView.swift */; };
 		F6218F2C259018D700B18F0E /* GameScreenView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6218F2B259018D700B18F0E /* GameScreenView.swift */; };
-		F627DF7C259400D300AD7E17 /* MapRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = F627DF7B259400D300AD7E17 /* MapRenderer.swift */; };
 		F627DF802594013300AD7E17 /* borders.csv in Resources */ = {isa = PBXBuildFile; fileRef = F627DF7F2594013300AD7E17 /* borders.csv */; };
 		F62BA76C257769B100C7282C /* AppEnvironment.swift in Sources */ = {isa = PBXBuildFile; fileRef = F62BA76B257769B100C7282C /* AppEnvironment.swift */; };
 		F651C43625788DC100C382C5 /* PlayerDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F651C43525788DC100C382C5 /* PlayerDetailView.swift */; };
@@ -37,7 +34,6 @@
 		F65F1EF2259F8DB300FD7371 /* Tile.swift in Sources */ = {isa = PBXBuildFile; fileRef = F65F1EF1259F8DB300FD7371 /* Tile.swift */; };
 		F65F1EFB259F901C00FD7371 /* Cell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F65F1EFA259F901C00FD7371 /* Cell.swift */; };
 		F65F1EFF259F905900FD7371 /* Corner.swift in Sources */ = {isa = PBXBuildFile; fileRef = F65F1EFE259F905900FD7371 /* Corner.swift */; };
-		F65F1F03259FF14C00FD7371 /* HexMapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F65F1F02259FF14C00FD7371 /* HexMapView.swift */; };
 		F65F1F0725A05E5200FD7371 /* HexGrid+CGPath.swift in Sources */ = {isa = PBXBuildFile; fileRef = F65F1F0625A05E5200FD7371 /* HexGrid+CGPath.swift */; };
 		F67AD10A257C38F0009F8137 /* MarketSummary.swift in Sources */ = {isa = PBXBuildFile; fileRef = F67AD109257C38F0009F8137 /* MarketSummary.swift */; };
 		F67AD10E257CA776009F8137 /* Array+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F67AD10D257CA776009F8137 /* Array+Extensions.swift */; };
@@ -70,13 +66,10 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		F61A66AA25969C0D0088D7EF /* LegacyMapData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LegacyMapData.swift; sourceTree = "<group>"; };
-		F6218F15258EBEFA00B18F0E /* MapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapView.swift; sourceTree = "<group>"; };
 		F6218F1A2590029000B18F0E /* TitleScreenView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TitleScreenView.swift; sourceTree = "<group>"; };
 		F6218F1E2590046000B18F0E /* LiteApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiteApp.swift; sourceTree = "<group>"; };
 		F6218F2525900D6F00B18F0E /* GameOverScreenView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameOverScreenView.swift; sourceTree = "<group>"; };
 		F6218F2B259018D700B18F0E /* GameScreenView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameScreenView.swift; sourceTree = "<group>"; };
-		F627DF7B259400D300AD7E17 /* MapRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapRenderer.swift; sourceTree = "<group>"; };
 		F627DF7F2594013300AD7E17 /* borders.csv */ = {isa = PBXFileReference; lastKnownFileType = text; path = borders.csv; sourceTree = "<group>"; };
 		F62BA76B257769B100C7282C /* AppEnvironment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppEnvironment.swift; sourceTree = "<group>"; };
 		F651C43525788DC100C382C5 /* PlayerDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerDetailView.swift; sourceTree = "<group>"; };
@@ -100,7 +93,6 @@
 		F65F1EF1259F8DB300FD7371 /* Tile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tile.swift; sourceTree = "<group>"; };
 		F65F1EFA259F901C00FD7371 /* Cell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Cell.swift; sourceTree = "<group>"; };
 		F65F1EFE259F905900FD7371 /* Corner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Corner.swift; sourceTree = "<group>"; };
-		F65F1F02259FF14C00FD7371 /* HexMapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HexMapView.swift; sourceTree = "<group>"; };
 		F65F1F0625A05E5200FD7371 /* HexGrid+CGPath.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "HexGrid+CGPath.swift"; sourceTree = "<group>"; };
 		F67AD109257C38F0009F8137 /* MarketSummary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarketSummary.swift; sourceTree = "<group>"; };
 		F67AD10D257CA776009F8137 /* Array+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Array+Extensions.swift"; sourceTree = "<group>"; };
@@ -147,12 +139,8 @@
 		F6218F14258EBEE800B18F0E /* Map */ = {
 			isa = PBXGroup;
 			children = (
-				F6218F15258EBEFA00B18F0E /* MapView.swift */,
 				F6C52CF92592F27E005B3397 /* MapApp.swift */,
-				F65F1F02259FF14C00FD7371 /* HexMapView.swift */,
-				F627DF7B259400D300AD7E17 /* MapRenderer.swift */,
 				F65F1EE32599D28000FD7371 /* BorderData.swift */,
-				F61A66AA25969C0D0088D7EF /* LegacyMapData.swift */,
 				F6DF016D25947CDC00C0176A /* states.json */,
 				F627DF7F2594013300AD7E17 /* borders.csv */,
 				F65F1EF7259F8FCC00FD7371 /* HexGrid */,
@@ -497,7 +485,6 @@
 				F652CD81256FBD7600EB2E47 /* Production.swift in Sources */,
 				F6218F1B2590029000B18F0E /* TitleScreenView.swift in Sources */,
 				F6CCBDBA256B7B800089E125 /* EventLogView.swift in Sources */,
-				F65F1F03259FF14C00FD7371 /* HexMapView.swift in Sources */,
 				F6CCBDB8256B7B800089E125 /* ProhibitionApp.swift in Sources */,
 				F65F1EE02599CBBE00FD7371 /* HexGrid.swift in Sources */,
 				F65F1EFB259F901C00FD7371 /* Cell.swift in Sources */,
@@ -508,7 +495,6 @@
 				F67AD10A257C38F0009F8137 /* MarketSummary.swift in Sources */,
 				F6218F1F2590046000B18F0E /* LiteApp.swift in Sources */,
 				F652CD6C256FA43800EB2E47 /* Trade.swift in Sources */,
-				F61A66AB25969C0D0088D7EF /* LegacyMapData.swift in Sources */,
 				F652CD71256FBB4900EB2E47 /* Inventory.swift in Sources */,
 				F652CD50256FA2AF00EB2E47 /* Brand.swift in Sources */,
 				F6B5F1002574E9B000AE9E83 /* AppAction.swift in Sources */,
@@ -518,8 +504,6 @@
 				F6B5F117257502FC00AE9E83 /* Travel.swift in Sources */,
 				F62BA76C257769B100C7282C /* AppEnvironment.swift in Sources */,
 				F6CBA3EF2582140F0021EC73 /* Product.swift in Sources */,
-				F627DF7C259400D300AD7E17 /* MapRenderer.swift in Sources */,
-				F6218F16258EBEFA00B18F0E /* MapView.swift in Sources */,
 				F65F1EE42599D28000FD7371 /* BorderData.swift in Sources */,
 				F6B5F10A2574F0FE00AE9E83 /* View+Hidden.swift in Sources */,
 				F652CD76256FBD2000EB2E47 /* RandomExample.swift in Sources */,
