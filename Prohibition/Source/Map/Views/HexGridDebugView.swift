@@ -1,5 +1,5 @@
 //
-//  HexGridView.swift
+//  HexGridDebugView.swift
 //  Prohibition
 //
 //  Created by Johnny Sparks  on 12/28/20.
@@ -8,7 +8,7 @@
 import Foundation
 import SwiftUI
 
-struct HexGridView: View {
+struct HexGridDebugView: View {
     @State var focus: HexGrid.Cell = HexGrid.Cell(q: 5, r: 5)
     @State var scale: CGFloat = 1
 

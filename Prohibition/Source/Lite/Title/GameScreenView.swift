@@ -171,7 +171,7 @@ struct GameState: Equatable {
     }
 }
 
-private extension LiteState {
+extension LiteState {
     func cityState(for city: City) -> GameState.CityState {
         .init(city: city, name: city.name, stock: self.current.wallet(for: city).stock)
     }

@@ -31,9 +31,9 @@ enum City: String, Codable, CaseIterable, Identifiable {
     case jacksonville = "Jacksonville"
     case richmond = "Richmond"
     case knoxvile = "Knoxvile"
-    case losAngeles = "Los Angeles"
-    case sanFrancisco = "San Francisco"
-    case oakland = "Oakland"
+//    case losAngeles = "Los Angeles"
+//    case sanFrancisco = "San Francisco"
+//    case oakland = "Oakland"
 
     enum Size {
         case town // under 200k
@@ -109,15 +109,15 @@ enum City: String, Codable, CaseIterable, Identifiable {
         case .baltimore: return (733_826, .growing)
 
         case .pittsburgh: return (588_343, .growing)
-        case .losAngeles: return (576_673, .exploding)
-        case .sanFrancisco: return (506_676, .exploding)
+//        case .losAngeles: return (576_673, .exploding)
+//        case .sanFrancisco: return (506_676, .exploding)
         case .milwaukee: return (457_147, .growing)
         case .cincinnati: return (401_247, .booming)
         case .indianapolis: return (314_194, .steady)
         case .stLouis: return (293_792, .steady)
         case .columbus: return (237_000, .booming)
         case .louisville: return (234_900, .steady)
-        case .oakland: return (216_261, .booming)
+//        case .oakland: return (216_261, .booming)
         case .atlanta: return (200_616, .steady)
 
         case .richmond: return (171_667, .growing)
@@ -138,15 +138,15 @@ enum City: String, Codable, CaseIterable, Identifiable {
         case .boston: return .init(x: -71.057083, y: 42.361145)
         case .baltimore: return .init(x: -76.609383, y: 39.299236)
         case .pittsburgh: return .init(x: -79.995888, y: 40.440624)
-        case .losAngeles: return .init(x: -118.243683, y: 34.052235)
-        case .sanFrancisco: return .init(x: -122.431297, y: 37.773972)
+//        case .losAngeles: return .init(x: -118.243683, y: 34.052235)
+//        case .sanFrancisco: return .init(x: -122.431297, y: 37.773972)
         case .milwaukee: return .init(x: -87.906471, y: 43.038902)
         case .cincinnati: return .init(x: -84.512016, y: 39.103119)
         case .indianapolis: return .init(x: -86.148003, y: 39.791000)
         case .stLouis: return .init(x: -90.199402, y: 38.627003)
         case .columbus: return .init(x: -82.983330, y: 39.983334)
         case .louisville: return .init(x: -85.764771, y: 38.328732)
-        case .oakland: return .init(x: -122.271111, y: 37.804363)
+//        case .oakland: return .init(x: -122.271111, y: 37.804363)
         case .atlanta: return .init(x: -84.386330, y: 33.753746)
         case .richmond: return .init(x: -77.434769, y: 37.541290)
         case .nashville: return .init(x: -86.767960, y: 36.174465)

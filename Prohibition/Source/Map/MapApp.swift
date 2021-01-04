@@ -5,116 +5,77 @@
 //  Created by Johnny Sparks  on 12/22/20.
 //
 
+import ComposableArchitecture
 import Foundation
 import SwiftUI
 
-protocol HexMappable: Identifiable, Hashable, CustomStringConvertible {
-    var grid: HexGrid { get }
-    var path: CGPath { get }
-    var focus: HexGrid.Cell { get }
-}
-
-struct HexMappableState: HexMappable {
-    var id: String { self.description }
-
-    let grid: HexGrid
-    let cells: Set<HexGrid.Cell>
-    let focus: HexGrid.Cell
-    let description: String
-    var path: CGPath
-}
-
-struct PathMapView: View {
-    @State var focus: HexGrid.Cell = HexGrid.Cell(q: -729, r: 617) // Cell(q: -555, r: 586)
-    // Scale = number of hex tiles per screen wide
-    @State var scale: CGFloat = 30
-
-    let hexGrid = HexGrid(size: 0.157586, orientation: .pointy)
-    var mappables: [HexMappableState]
-
-    init() {
-        self.mappables = BorderData(stateCollection: .continuous, hexGrid: self.hexGrid)
-            .hexMappableStates
-    }
-
-    func offset(in size: CGSize) -> CGSize {
-        let p = self.hexGrid.center(for: self.focus)
-        return CGSize(width: size.width * 0.5 - p.x, height: size.height * 0.5 - p.y)
-    }
+struct CityListMapView: View {
+    let appStore: Store<LiteState, LiteAction>
 
     var body: some View {
-        GeometryReader { geo in
-            ZStack {
-                ForEach(self.mappables) { mappable in
-                    HexMappableView(hex: mappable)
+        WithViewStore(self.appStore.scope(state: \.gameState)) { store in
+            VStack(alignment: .center, spacing: 8) {
+                HexMapView(city: store.current.city)
+                    .frame(maxWidth: .infinity, idealHeight: 200)
+                    .clipped()
+
+                HStack(alignment: .top) {
+                    VStack(alignment: .leading) {
+                        Text(store.state.playerMoney)
+                        Text(store.state.playerStock)
+                    }
+
+                    Spacer()
+
+                    Text(store.state.turnsRemaining)
                 }
-                .offset(self.offset(in: geo.size))
-                .scaleEffect(self.scale)
-                .animation(.spring())
+                .frame(maxWidth: .infinity)
+                .padding(8)
+
+                self.cityList(cities: store.cities) { store.send($0) }
+                    .padding(8)
+
+                Spacer()
             }
-            .background(Color.black)
-            .gesture(
-                DragGesture(minimumDistance: 0, coordinateSpace: .local)
-                    .onEnded({ end in
-                        let point = end.startLocation
-                        // relative point to center to give us the desired translation from the current focus
-                        let relative = CGPoint(x: point.x - geo.size.width * 0.5,
-                                               y: point.y - geo.size.height * 0.5)
-                            .applying(.init(scaleX: 1 / self.scale, y: 1 / self.scale))
-
-                        let oldOffset = self.offset(in: geo.size).point
-                        let newOffset = CGPoint(x: oldOffset.x - relative.x, y: oldOffset.y - relative.y)
-
-                        let newFocus = CGPoint(x: geo.size.width * 0.5 - newOffset.x,
-                                               y: geo.size.height * 0.5 - newOffset.y)
-
-                        let focusCell = self.hexGrid.cell(from: newFocus)
-                        let matches = self.mappables.filter { $0.cells.contains(focusCell) }
-                        if !matches.isEmpty, let hitFocus = matches.first?.focus {
-                            print(matches.map(\.description).joined(separator: " "))
-                            self.focus = hitFocus
-                        }
-                    })
-            )
+            .padding(8)
         }
     }
 
-    struct HexMappableView: View {
-        let hex: HexMappableState
-        let path: Path
+    private func cityList(cities: [GameState.CityState], send: @escaping ((LiteAction) -> Void)) -> some View {
+        VStack(alignment: .leading) {
+            ForEach(cities) { city in
+                HStack {
+                    Text(city.name)
+                        .frame(maxWidth: .infinity, alignment: .leading)
 
-        init(hex: HexMappableState) {
-            self.hex = hex
-            self.path = Path(hex.path)
-        }
+                    Image(systemName: "cart.badge.plus")
+                        .font(.caption)
 
-        var body: some View {
-            self.path
-                .fill(Color.green)
+                    Text(city.buy.display)
+                        .foregroundColor(city.buy.buyColor)
+                        .frame(width: 30)
+
+                    Image(systemName: "dollarsign.circle")
+                        .font(.caption)
+
+                    Text(city.sell.display)
+                        .foregroundColor(city.sell.sellColor)
+                        .frame(width: 30)
+
+                    // button
+                    Button("Go") {
+                        send(.play(.travel(city.city)))
+                    }
+                }
+            }
         }
     }
 }
 
-@main
 struct MapApp: App {
     var body: some Scene {
         WindowGroup {
-//            HexGridView()
-//            MapView()
-//            HexMapView()
-            PathMapView()
+//            CityListMapView(appStore: <#Store<LiteState, LiteAction>#>)
         }
     }
-}
-
-extension CGRect {
-    var midPoint: CGPoint { .init(x: self.midX, y: self.midY) }
-}
-
-extension CGSize {
-    var point: CGPoint { .init(x: self.width, y: self.height) }
-}
-
-extension CGPoint {
-    var size: CGSize { .init(width: self.x, height: self.y) }
 }

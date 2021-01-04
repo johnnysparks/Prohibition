@@ -190,7 +190,7 @@ let liteStore = Store<LiteState, LiteAction>(
     environment: LiteEnvironment()
 )
 
-//@main
+@main
 struct LiteApp: App {
     @Environment(\.scenePhase) private var scenePhase
 
@@ -219,7 +219,8 @@ struct LiteApp: App {
         case .unstarted:
             return AnyView(TitleScreenView(appStore: liteStore))
         case .running:
-            return AnyView(GameScreenView(appStore: liteStore))
+//            return AnyView(GameScreenView(appStore: liteStore))
+            return AnyView(CityListMapView(appStore: liteStore))
         case .ended:
             return AnyView(GameOverScreenView(appStore: liteStore))
         }

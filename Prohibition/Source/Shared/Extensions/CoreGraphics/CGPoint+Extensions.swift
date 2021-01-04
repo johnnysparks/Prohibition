@@ -8,6 +8,10 @@
 import CoreGraphics
 
 extension CGPoint {
+    func scaledUniformly(_ amount: CGFloat) -> CGPoint {
+        CGPoint(x: self.x * amount, y: self.y * amount)
+    }
+
     func distance(to other: CGPoint) -> CGFloat {
         let x = self.x - other.x
         let y = self.y - other.y
@@ -24,6 +28,10 @@ extension CGPoint {
         let dy = maxY - minY
 
         return .init(x: 0.5 * dx + minX, y: 0.5 * dy + minY)
+    }
+
+    var size: CGSize {
+        .init(width: self.x, height: self.y)
     }
 
     func interpolated(to other: CGPoint, segments: Int) -> [CGPoint] {
@@ -58,5 +66,37 @@ extension CGPoint {
         }
 
         return zip(xs, ys).map(CGPoint.init)
+    }
+}
+
+extension CGPoint {
+    static func + (lhs: CGPoint, rhs: CGPoint) -> CGPoint {
+        CGPoint(x: lhs.x + rhs.x, y: lhs.x + rhs.x)
+    }
+}
+
+// MARK: - Array
+
+extension Array where Element == CGPoint {
+    var invertedLatitudes: Self { self.map(\.invertedLatitude) }
+
+    func scaledUniformly(_ amount: CGFloat) -> Self {
+        self.map { $0.scaledUniformly(amount) }
+    }
+
+    var toCGPath: CGPath? {
+        guard let first = self.first else { return nil }
+        let p = CGMutablePath()
+        p.move(to: first)
+        p.addLines(between: self)
+        return p
+    }
+}
+
+// MARK: - GPS
+
+extension CGPoint {
+    var invertedLatitude: CGPoint {
+        .init(x: self.x, y: -self.y + 180)
     }
 }
