@@ -31,7 +31,7 @@ struct HexAnnotation {
 }
 
 class HexMapData {
-    private let grid: HexGrid
+    let grid: HexGrid
     let states: [HexGeometry]
     let cities: [HexGeometry]
     let annotations: [HexAnnotation]

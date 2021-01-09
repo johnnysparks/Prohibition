@@ -9,13 +9,15 @@ import ComposableArchitecture
 import Foundation
 import SwiftUI
 
+private let kMap = HexMapData(grid: HexGrid(size: 17, orientation: .pointy))
+
 struct CityListMapView: View {
     let appStore: Store<LiteState, LiteAction>
 
     var body: some View {
         WithViewStore(self.appStore.scope(state: \.gameState)) { store in
             VStack(alignment: .center, spacing: 8) {
-                HexMapView(city: store.current.city)
+                HexMapView(map: kMap, city: store.current.city)
                     .frame(maxWidth: .infinity, idealHeight: 200)
                     .clipped()
 
